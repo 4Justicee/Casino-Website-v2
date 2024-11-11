@@ -1,0 +1,164 @@
+<div class="modal fade" id="staticModal" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true"
+    data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticModalLabel"><%= __('modal.title.create.new.agent') %></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xl-6" style="margin-top:0.5rem">
+                        <select class="form-control" id="parentAgent">
+                            <option value='0' selected disabled><%= __('text.placeholder.select.parent.agent') %></option>
+                            <% for (let i = 0; i < agents.length; i++) { %> 
+                                <option value="<%=agents[i].id%>"><%= agents[i].agentCode %></option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="col-xl-6" style="margin-top:0.5rem">
+                        <input type="text" class="form-control" placeholder="<%= __('text.placeholder.agent.name') %>" id="agentName" name="agentName" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-6" style="margin-top:0.5rem">
+                        <input type="text" value='' class="form-control" placeholder="<%= __('text.placeholder.agent.code') %>" id="agentCode" name="agentCode" autocomplete="off"/>                        
+                    </div>
+                    <div class="col-xl-6" style="margin-top:0.5rem">
+                        <input type="password" value='' class="form-control" placeholder="<%= __('text.placeholder.password') %>" id="password" name="password"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-6" style="margin-top:0.5rem">
+                        <input type="number" class="form-control" placeholder="<%= __('text.placeholder.percent') %>" id="percent" name="percent"/>                        
+                    </div>
+                    <div class="col-xl-6" style="margin-top:0.5rem">
+                        <input type="text" class="form-control" placeholder="<%= __('text.placeholder.memo') %>" id="memo" name="memo"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-6" style="margin-top:0.5rem">
+                        <input type="text" class="form-control" placeholder="<%= __('text.placeholder.currency') %>" id="currency" name="currency"/>                        
+                    </div>
+                    <div class="col-xl-6" style="margin-top:0.5rem">
+                        <select class="form-control" id="apiType">
+                            <option value="0">Seamless mode</option>
+                            <option value="1">Transfer mode</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12" style="margin-top:0.5rem">
+                        <input type="text" class="form-control" placeholder="<%= __('text.placeholder.site.end.point') %>" id="endpoint" name="endpoint"/>                        
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= __('button.text.cancel') %> </button>
+                <button type="button" class="btn btn-primary" id="make_new_agent"><%= __('button.text.confirm') %></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exchangeModal" tabindex="-1" role="dialog" aria-labelledby="exchangeModalLabel" aria-hidden="true"
+    data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exchangeModalLabel"><%= __('modal.title.agent.exchange') %></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xl-6" style="margin-top:0.5rem">
+                        <input type="number" class="form-control" placeholder="<%= __('text.placeholder.balance') %>" id="balance" name="balance" autocomplete="off"/>
+                    </div>
+                    <div class="col-xl-6" style="margin-top:0.5rem">
+                        <select class="form-control" id="balance_exchange_type">
+                            <option value="1"><%= __('select.option.deposit') %></option>
+                            <option value="0"><%= __('select.option.withdraw') %></option>
+                        </select>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= __('button.text.cancel') %></button>
+                <button type="button" class="btn btn-primary" id="make_exchange"><%= __('button.text.confirm') %></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="providersModal" tabindex="-1" role="dialog" aria-labelledby="providersModalLabel" aria-hidden="true"
+    data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="providersModalLabel"><%= __('modal.title.provider.settings') %></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xl-12" style="margin-top:0.5rem">
+                        <select class="form-control" multiple="multiple" id="provider-selector">
+                           
+                        </select>
+                    </div>
+                </div>                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= __('button.text.cancel') %></button>
+                <button type="button" class="btn btn-primary" id="provider_save"><%= __('button.text.confirm') %></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="rtpModal" tabindex="-1" role="dialog" aria-labelledby="rtpModalLabel" aria-hidden="true"
+    data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rtpModalLabel"><%= __('modal.title.rtp.settings') %></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xl-12" style="margin-top:0.5rem">
+                        <select class="form-control" id="rtp-selector">
+                            <option value="0">0 %</option>
+                            <option value="10">10 %</option>
+                            <option value="20">20 %</option>
+                            <option value="30">30 %</option>
+                            <option value="40">40 %</option>
+                            <option value="50">50 %</option>
+                            <option value="55">55 %</option>
+                            <option value="60">60 %</option>
+                            <option value="65">65 %</option>
+                            <option value="70">70 %</option>
+                            <option value="75">75 %</option>
+                            <option value="80">80 %</option>
+                            <option value="85">85 %</option>
+                            <option value="90">90 %</option>
+                            <option value="95">95 %</option>
+                        </select>
+                    </div>
+                </div>                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= __('button.text.cancel') %></button>
+                <button type="button" class="btn btn-primary" id="rtp_save"><%= __('button.text.confirm') %></button>
+            </div>
+        </div>
+    </div>
+</div>

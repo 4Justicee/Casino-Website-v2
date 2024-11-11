@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('../template/header.ejs') -%>
+    <style>
+    .dt-length {
+        margin:1rem !important;
+    }
+    .dt-paging {
+        float:right;
+        margin:1rem !important;
+    }
+    </style>
+    <body class="animsition">
+        <div class="page-wrapper">
+            <!-- MENU SIDEBAR-->
+            <%- include('../template/sidebar.ejs',  {page: "master_balance"}) -%>
+            <!-- END MENU SIDEBAR-->
+    
+            <!-- PAGE CONTAINER-->
+            <div class="page-container2">
+                <!-- HEADER DESKTOP-->
+                <%- include('../template/rightsidebar.ejs') -%>
+                <%- include('../template/mobilesidebar.ejs', {page: "master_balance"}) -%>
+                <!-- END HEADER DESKTOP-->
+                <div class="page-loader__spin" style="display:none;"></div>
+                <!-- BREADCRUMB-->
+                <div class="main-content">                    
+                    <div class="section__content section__content--p30">                        
+                        <div class="container-fluid">                            
+                            <div class="row">
+                                <div class="col-lg-12" >                                    
+                                    <div class="table-responsive table--no-card m-b-30">                                        
+                                        <table class="table table-borderless table-striped table-earning display nowrap" id="transaction_table" style="width:100%; margin:1rem 0">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th><%= __('table.th.created.date') %></th>
+                                                    <th><%= __('table.th.agent') %></th>
+                                                    <th><%= __('table.th.api') %></th>
+                                                    <th class="text-right"><%= __('table.th.amount') %></th>
+                                                    <th class="text-right"><%= __('table.th.before') %></th>
+                                                    <th class="text-right"><%= __('table.th.after') %></th>                                                     
+                                                    <th class="text-right"><%= __('table.th.before.total') %></th>                                                    
+                                                    <th class="text-right"><%= __('table.th.after.total') %></th>
+                                                    <th><%= __('table.th.target') %></th>
+                                                    <th><%= __('table.th.cause') %></th>
+                                                    <th><%= __('table.th.comment') %></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                          
+                            
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="copyright">
+                                        <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" value="0" id="tmp_buff" name="tmp_buff"/>
+                <!-- END PAGE CONTAINER-->
+            </div>
+    
+    </div>
+    <%- include('../template/footer.ejs') -%>
+    <%- include('../template/global.ejs') -%>
+    <script>       
+        $(document).ready(function () {   
+            const role = "<%= session.auth.role%>";
+
+        });
+            
+        const table =new DataTable('#transaction_table', {
+            ajax: function(data, callback, settings) {  
+                const params = {  
+                    ...data, // Include default DataTable parameters  
+                    startDate: moment(new Date()).subtract(1, "months").format("YYYY-MM-DD 00:00:00"),  
+                    endDate: moment(new Date()).format("YYYY-MM-DD 23:59:59"),
+                    searchKey : data.search.value,
+                };  
+
+                $.ajax({  
+                    url: '/api/agent_balance',  
+                    type: 'POST',  
+                    data: params,  
+                    success: function(response) {  
+                        // Use the callback to pass the data to the DataTable  
+                        callback({  
+                            draw: response.draw,  
+                            recordsTotal: response.recordsTotal,  
+                            recordsFiltered: response.recordsFiltered,  
+                            data: response.data // Assuming your response contains a 'data' array  
+                        });  
+                    },  
+                    error: function(jqXHR, textStatus, errorThrown) {  
+                        console.error('Error fetching data: ', textStatus, errorThrown);  
+                    }  
+                });  
+            },  
+            responsive: true,
+            columns: [
+                {
+                    class: 'dt-control',
+                    orderable: false,
+                    data: null,
+                    defaultContent: ''
+                },
+                { 
+                    data: 'createdAt',
+                    render: function(data, type, row) { 
+                        return data.substr(0, 16).replace("T", " ");
+                    }
+                },
+                { data: 'agentCode' },
+                { data: 'apiType',render: function(data, type, row) { 
+                        return data==0 ? `<span class="badge badge-primary">seamless</span>`:`<span class="badge badge-success">transfer</span>`
+                    } },                                       
+                { data: 'amount',render: function(data, type, row) { 
+                        return data==null ? "" : data.toLocaleString();
+                    } },
+                { data: 'agentPrevBalance',render: function(data, type, row) { 
+                        return data==null ? "" : data.toLocaleString();
+                    } },
+                { data: 'agentAfterBalance',render: function(data, type, row) { 
+                        return data==null ? "" : data.toLocaleString();
+                    } },
+                { data: 'agentPrevTotalBalance',render: function(data, type, row) { 
+                        return data==null ? "" : data.toLocaleString();
+                    } },
+                { data: 'agentAfterTotalBalance',render: function(data, type, row) { 
+                        return data==null ? "" : data.toLocaleString();
+                    } },
+                { data: 'target' },
+                { data: 'cause' },
+                { data: 'comment' },
+                
+            ],
+            order: [[1, 'asc']],
+            processing: true,          
+            serverSide: true,
+            info: true,
+            ordering: false,   
+            "language": {
+                "lengthMenu": "<%= __('datatable.length.menu') %>",
+                "info": "<%= __('datatable.info') %>",
+                "infoEmpty": "<%= __('datatable.info.empty') %>",
+                "emptyTable": "<%= __('datatable.no.data') %>",
+                "search": "<%= __('datatable.search') %>",
+                "zeroRecords": "<%= __('datatable.no.matching') %>"
+             }
+        });
+
+    </script>
+</body>
+
+</html>
+<!-- end document-->

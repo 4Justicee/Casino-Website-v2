@@ -1,0 +1,203 @@
+
+<script>
+    
+
+    $("#btn-sign-in").click(function(e) {
+        const masterCode = $("#masterCode").val();
+        const password = $("#password").val();
+
+        if(masterCode.trim() == "") {
+            toastr.error("Agent Code can not be empty!", "Error");
+            return;
+        }
+
+        if(password.trim() == "") {
+            toastr.error("Password can not be empty!", "Error");
+            return;
+        }
+        $("#btn-sign-in").html("Please wait ...");
+        $("#btn-sign-in").attr("disabled", true);
+
+        $.ajax({
+            url: '/api/auth/login',  // The URL where you're sending the POST request
+            type: 'POST',               // Method type
+            data: {                     // Data to be sent in the request
+                masterCode,
+                password,
+            },
+            success: function(response) {  // Callback when the request succeeds
+                if (response.status) {
+                    window.location.href = response.redirectUrl;
+                } else {
+                    $("#btn-sign-in").html("sign in");    
+                    if (response.msg == "INVALID_AGENT") {
+                        toastr.error("Incorrect Agent", "Error");
+                    } else if (response.msg == "INCORRECT_PASSWORD") {
+                        toastr.error("Incorrect Password", "Error");
+                    } else if (response.msg == "BLOCKED_AGENT") {
+                        toastr.error("Please wait for the administrator to approve it.", "Error");
+                    } else {
+                        toastr.error("Login Request Failed.", "Error");
+                    }            
+                }
+                $("#btn-sign-in").removeAttr("disabled");
+            },
+            error: function(xhr, status, error) {  // Callback when there's an error
+                console.error('Error:', error);
+                $("#btn-sign-in").removeAttr("disabled");
+            }
+        });
+    })   
+    
+    $(".btn-sign-out").click(function(e) {
+        
+        $.ajax({
+            url: '/api/auth/logout',  // The URL where you're sending the POST request
+            type: 'POST',               // Method type
+            data: {                     // Data to be sent in the request
+            },
+            success: function(response) {  // Callback when the request succeeds
+               location.href = "/";
+            },
+            error: function(xhr, status, error) {  // Callback when there's an error
+                console.error('Error:', error);
+            }
+        });
+    })
+    $("#password_change").click(function() {
+        const oldpwd = $("#oldpwd").val();
+        const newpwd = $("#newpwd").val();
+        const confirmpwd = $("#confirmpwd").val();
+        if(newpwd != confirmpwd) {
+            toastr.error(`Password mismatch error!`);
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: `/api/agent_update_pwd`,
+            data: {
+                oldpwd,
+                newpwd
+            },
+            success: function (res) {
+                $("#profileModal").modal('hide');
+                if(res.status == 1) {
+                    toastr.info(`Success`);                    
+                }
+                else if(res.status == 0) {
+                    toastr.error(res.msg);
+                }
+            }
+        });    
+    })
+    function showConfirmAlert(title, callback) {
+        Swal.fire({
+            text: title,
+            icon: "question",
+            showCancelButton: !0,
+            confirmButtonText: "<%= __('button.text.yes') %>",
+            cancelButtonText: "<%= __('button.text.cancel') %>",
+            confirmButtonColor: "#1C3FAA",
+        }).then(function (t) {
+            if (t.value) {
+                callback();
+            }
+        });
+    }
+    function processCopy(button, text) {
+        navigator.clipboard.writeText(text).then(function() {
+            button.attr("disabled","true");
+            button.html(`<i class="fa fa-check"></i>&nbsp; <%= __('document.copied') %>`);
+            setTimeout(function() {
+                button.removeAttr('disabled');
+                button.html(`<i class="fa fa-copy"></i>&nbsp; <%= __('document.copy.code') %>`);
+            }, 1500); 
+        }).catch(function(err) {
+            console.error('Failed to copy: ', err);
+        });
+    }
+    function ch() {            
+        if(window.innerWidth < 991) {
+            $("div.dt-container").css("width", window.innerWidth - 64);
+            $("div.dt-container").css("maxWidth", window.innerWidth);
+        }
+        else {
+            $("div.dt-container").css("maxWidth", window.innerWidth - 300);
+        }
+    }
+    ch();
+    window.onresize = function() {  
+        ch();
+    };  
+
+    document.addEventListener('click', function() {  
+        const dropdowns = document.querySelectorAll('.dropdown');  
+        dropdowns.forEach(dropdown => {  
+            dropdown.style.display = 'none';  
+        });  
+    }); 
+
+    function changeStatus(rid) {
+        const chk = $('#chk-'+rid)[0].checked;
+
+        $.ajax({
+            type: "POST",
+            url: `/api/agent_update`,
+            data: {
+                agentId: rid,
+                status: chk == true ? 1: 0
+            },
+            success: function (res) {
+                toastr.info('Status updated');                    
+            }
+        });                
+    }
+    function toggleDropdown(event) {  
+        // Prevents propagation of the click event  
+        event.stopPropagation();  
+
+        // Get all dropdowns  
+        const dropdowns = document.querySelectorAll('.dropdown');  
+        
+        // Close all dropdowns except for the one clicked  
+        dropdowns.forEach(dropdown => {  
+            if (dropdown !== event.currentTarget.nextElementSibling) {  
+                dropdown.style.display = 'none';  
+            }  
+        });  
+
+        // Toggle the clicked dropdown  
+        const dropdown = event.currentTarget.nextElementSibling;  
+        dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';  
+    }  
+    function copyToken() {
+        var copyButton = $('#token_copy_btn');
+        var codeText = $('#myToken').val();
+        processCopy(copyButton, codeText);
+    }
+    function showProfile() {
+        $("#profileModal").modal("show");
+    }
+    function getStartAndEndDate(type, useStore = 1) {
+        let startDate, endDate;
+        switch (type) {
+            case "1":
+            startDate = moment(new Date()).subtract(7, "days").format("YYYY-MM-DD 00:00:00");
+                endDate = moment(new Date()).format("YYYY-MM-DD 23:59:59");
+                break;
+            case "2":
+                startDate = moment(new Date()).subtract(15, "days").format("YYYY-MM-DD 00:00:00");
+                endDate = moment(new Date()).format("YYYY-MM-DD 23:59:59");
+                break;
+            case "3":
+                startDate = moment(new Date()).subtract(1, "month").format("YYYY-MM-DD 00:00:00");
+                endDate = moment(new Date()).format("YYYY-MM-DD 23:59:59");
+                break;
+        }
+      
+        if(useStore == 1) {
+            localStorage.setItem('periodIndex', type);
+        }
+        return { startDate, endDate };
+    }
+</script>

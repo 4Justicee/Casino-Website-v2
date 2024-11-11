@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('../template/header.ejs') -%>
+    <style>
+    .dt-length {
+        margin:1rem !important;
+    }
+    .dt-paging {
+        float:right;
+        margin:1rem !important;
+    } 
+    </style>
+    <body class="animsition">
+        <div class="page-wrapper">
+            <!-- MENU SIDEBAR-->
+            <%- include('../template/sidebar.ejs',  {page: "plan"}) -%>
+            <!-- END MENU SIDEBAR-->
+    
+            <!-- PAGE CONTAINER-->
+            <div class="page-container2">
+                <!-- HEADER DESKTOP-->
+                <%- include('../template/rightsidebar.ejs') -%>
+                <%- include('../template/mobilesidebar.ejs', {page: "plan"}) -%>
+                <!-- END HEADER DESKTOP-->
+                <div class="page-loader__spin" style="display:none;"></div>
+                <!-- BREADCRUMB-->
+                <div class="main-content">
+                    <div style="display:flex; justify-content: right;margin-right:1rem; margin-bottom:1rem"><button class="btn btn-primary" onclick="openCreateModal();">+ New Plan</button></div>
+                    <div class="section__content section__content--p30">
+                        <div class="container-fluid">
+                            <div class="row">
+                                
+                                <div class="col-lg-12" >
+                                    <div class="table-responsive table--no-card m-b-30">
+                                        <table class="table table-borderless table-striped table-earning display nowrap" id="agent_table" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th><%= __('table.th.name') %></th>
+                                                    <th><%= __('table.th.amount') %></th>
+                                                    <th><%= __('table.th.bonus.percent') %></th>
+                                                    <th><%= __('table.th.allow.ggr') %></th>
+                                                    <th><%= __('table.th.memo') %></th>                                                    
+                                                    <th><%= __('table.th.action') %></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="copyright">
+                                        <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" value="0" id="tmp_buff" name="tmp_buff"/>
+                <!-- END PAGE CONTAINER-->
+            </div>
+    
+    </div>
+    <%- include('../template/footer.ejs') -%>
+    <%- include('../template/global.ejs') -%>
+    <%- include('../template/planModals.ejs') -%>
+    <script>       
+        $(document).ready(function () {   
+            const role = "<%= session.auth.role%>";
+            $("#provider-selector").select2();
+        });
+            
+        const table =new DataTable('#agent_table', {
+            ajax: function(data, callback, settings) {  
+                const params = {  
+                    ...data, // Include default DataTable parameters  
+                    searchKey : data.search.value,
+                };  
+
+                $.ajax({  
+                    url: '/api/plan_list',  
+                    type: 'POST',  
+                    data: params,  
+                    success: function(response) {  
+                        // Use the callback to pass the data to the DataTable  
+                        callback({  
+                            draw: response.draw,  
+                            recordsTotal: response.recordsTotal,  
+                            recordsFiltered: response.recordsFiltered,  
+                            data: response.data // Assuming your response contains a 'data' array  
+                        });  
+                    },  
+                    error: function(jqXHR, textStatus, errorThrown) {  
+                        console.log('Error fetching data: ', textStatus, errorThrown);  
+                    }  
+                });  
+            },  
+            responsive: true,
+            columns: [
+            {
+                    class: 'dt-control',
+                    orderable: false,
+                    data: null,
+                    defaultContent: ''
+                },
+                { data: 'name' },
+                { data: 'amount' ,render: function(data, type, row) { 
+                        return Number(data).toLocaleString();
+                    }},               
+                { data: 'bonusPercent' },                    
+                { data: 'allowGGR' },           
+                { data: 'memo' },           
+                { data: null, render: function(data, type, row) {                     
+                    return `<button class='btn btn-outline-primary' onclick='removePlan(${row.id})'><i class="fas fa-trash"></i>&nbsp;<%= __('button.text.delete') %></button>`
+                } },
+            ],
+            order: [[1, 'asc']],
+            processing: true,
+            serverSide: true,
+            info: true,
+            ordering: false,   
+            paging: true,
+            "language": {
+                "lengthMenu": "<%= __('datatable.length.menu') %>",
+                "info": "<%= __('datatable.info') %>",
+                "infoEmpty": "<%= __('datatable.info.empty') %>",
+                "emptyTable": "<%= __('datatable.no.data') %>",
+                "search": "<%= __('datatable.search') %>",
+                "zeroRecords": "<%= __('datatable.no.matching') %>"
+             }
+        });
+        
+        
+        function openCreateModal() {
+            $("#planName").val("");
+            $("#planAmount").val(0);
+            $("#planBonus").val(0);
+            $("#planGGR").val(0);
+            $("#planMemo").val("");
+
+            $("#planModal").modal('show')
+        }
+
+        function removePlan(id) {
+            showConfirmAlert(`<%= __('msg.delete.plan.confirm') %>`, function () {
+                $.ajax({
+                    type: "POST",
+                    url: `/api/plan_delete`,
+                    data: {id},
+                    success: function (res) {        
+                        if (res.status) {
+                            table.ajax.reload();
+                        }
+                    },
+                });
+            });
+        }
+       
+        $("#create_new_plan").click(function(e){
+            const planName = $("#planName").val();
+            const planAmount = $("#planAmount").val();
+            const planBonus = $("#planBonus").val();
+            const planGGR = $("#planGGR").val();
+            const planMemo = $("#planMemo").val();
+
+            if(planGGR > 100) {
+                toastr.error(`<%= __('msg.ggr.error') %>`);
+                return;
+            }
+            
+            $.ajax({
+                type: "POST",
+                url: `/api/plan_create`,
+                data: {
+                    name:planName,
+                    amount : planAmount,
+                    bonusPercent : planBonus,
+                    allowGGR : planGGR,
+                    memo: planMemo,
+                },
+                success: function (res) {
+                    $("#planModal").modal("hide");
+                    if(res.status == 1) {
+                        toastr.info(`<%= __('msg.success') %>`);  
+                        table.ajax.reload(null, false)                   
+                    }
+                    else {
+                        toastr.error(res.msg);
+                    }
+                }
+            });                
+        })
+    </script>
+</body>
+
+</html>
+<!-- end document-->

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('../template/header.ejs') -%>
+    <style>
+
+    </style>
+    <body class="animsition">
+        <div class="page-wrapper">
+            <!-- MENU SIDEBAR-->
+            <%- include('../template/sidebar.ejs',  {page: "agent"}) -%>
+            <!-- END MENU SIDEBAR-->
+    
+            <!-- PAGE CONTAINER-->
+            <div class="page-container2">
+                <!-- HEADER DESKTOP-->
+                <%- include('../template/rightsidebar.ejs') -%>
+                <%- include('../template/mobilesidebar.ejs', {page: "agent"}) -%>
+                <!-- END HEADER DESKTOP-->
+                <div class="page-loader__spin" style="display:none;"></div>
+                <!-- BREADCRUMB-->
+                <div class="main-content">                    
+                    <div class="section__content section__content--p30">                        
+                        <div class="container-fluid">                            
+                            <div class="row">
+                                <div class="col-lg-12" >                                    
+                                    <div class="table-responsive table--no-card m-b-30">                                        
+                                        <table class="table table-borderless table-striped table-earning display nowrap" id="transaction_table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th><%= __('table.th.agent') %></th>
+                                                    <th><%= __('table.th.currency') %></th>
+                                                    <th><%= __('table.th.play.count') %></th>
+                                                    <th class="text-right"><%= __('table.th.total.bet') %></th>
+                                                    <th class="text-right"><%= __('table.th.total.win') %></th>
+                                                    <th class="text-right"><%= __('table.th.difference') %></th>
+                                                    <th class="text-right"><%= __('table.th.rtp') %></th>        
+    
+                                                </tr>
+                                            </thead>
+                                            <tbody>                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>                         
+                            
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="copyright">
+                                        <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" value="0" id="tmp_buff" name="tmp_buff"/>
+                <!-- END PAGE CONTAINER-->
+            </div>
+    
+    </div>
+    <%- include('../template/footer.ejs') -%>
+    <%- include('../template/global.ejs') -%>
+    <script>       
+        $(document).ready(function () {   
+            const role = "<%= session.auth.role%>";
+
+        });
+            
+        const table =new DataTable('#transaction_table', {
+            ajax: function(data, callback, settings) {  
+                console.log(data);
+                const o = data.order[0]['column'];
+                const dir = data.order[0]['dir'];
+                const order = data.columns[o].data;
+   
+                const params = {  
+                    ...data, // Include default DataTable parameters  
+                    startDate: moment(new Date()).subtract(1, "months").format("YYYY-MM-DD 00:00:00"),  
+                    endDate: moment(new Date()).format("YYYY-MM-DD 23:59:59"),
+                    order : order,
+                    dir
+                };  
+
+                $.ajax({  
+                    url: '/api/agent-stat',  
+                    type: 'POST',  
+                    data: params,  
+                    success: function(response) {  
+                        // Use the callback to pass the data to the DataTable  
+                        callback({  
+                            draw: response.draw,  
+                            recordsTotal: response.recordsTotal,  
+                            recordsFiltered: response.recordsFiltered,  
+                            data: response.data // Assuming your response contains a 'data' array  
+                        });  
+                    },  
+                    error: function(jqXHR, textStatus, errorThrown) {  
+                        console.error('Error fetching data: ', textStatus, errorThrown);  
+                    }  
+                });  
+            },  
+            responsive: true,
+            columns: [
+                {
+                    class: 'dt-control',
+                    orderable: false,
+                    data: null,
+                    defaultContent: '',
+                },
+                { data: 'parentPathCode', orderable: false },                                       
+                { data: 'currency', orderable: false },
+                { data: 'playCount' },                                       
+                { 
+                    data: 'totalDebit', 
+                    render: function(data, type, row) {
+                        return data.toLocaleString();
+                    }
+                },
+                { 
+                    data: 'totalCredit',  
+                    render: function(data, type, row) {
+                        return data.toLocaleString();
+                    }
+                },
+                { 
+                    data: 'difference',  
+                    render: function(data, type, row) {
+                        return data.toLocaleString();
+                    }
+                },
+                { 
+                    defaultContent:'', 
+                    orderable:false,
+                    render: function(data, type, row) { 
+                        let v = row.totalDebit == 0 ? 0 : row.totalCredit / row.totalDebit * 100;
+                        v = v.toFixed(2);
+                        return `${v}%`;
+                    }
+                },               
+            ],
+            processing: true,          
+            serverSide: true,
+            info: false,
+            ordering: true,   
+            paging: false,
+            dom: 'lrtip'
+        });
+        
+
+    </script>
+</body>
+
+</html>
+<!-- end document-->

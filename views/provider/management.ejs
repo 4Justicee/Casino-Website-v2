@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('../template/header.ejs') -%>
+    <style>
+    .dropdown {  
+        position: absolute;  
+        background-color: white;  
+        border: 1px solid #ddd;  
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);  
+        z-index: 1000;  
+        padding:1rem;
+    }  
+
+    .dropdown p {  
+        margin: 0;  
+        padding: 8px;  
+    }  
+
+    .dropdown p:hover {  
+        background-color: #f1f1f1;  
+    }  
+    </style>
+    <body class="animsition">
+        <div class="page-wrapper">
+            <!-- MENU SIDEBAR-->
+            <%- include('../template/sidebar.ejs',  {page: "provider_list"}) -%>
+            <!-- END MENU SIDEBAR-->
+    
+            <!-- PAGE CONTAINER-->
+            <div class="page-container2">
+                <!-- HEADER DESKTOP-->
+                <%- include('../template/rightsidebar.ejs') -%>
+                <%- include('../template/mobilesidebar.ejs', {page: "provider_list"}) -%>
+                <!-- END HEADER DESKTOP-->
+                <div class="page-loader__spin" style="display:none;"></div>
+                <!-- BREADCRUMB-->
+                <div class="main-content">
+                    <%if(session.auth.role == 1) {%>
+                    <div style="display:flex; justify-content: right;margin-right:1rem; margin-bottom:1rem"><button class="btn btn-primary" onclick="openCreateModal();">+ New Provider</button></div>
+                    <% } %>
+                    <div class="section__content section__content--p30">
+                        <div class="container-fluid">
+                            <div class="row">
+                                
+                                <div class="col-lg-12" >
+                                    <div class="table-responsive table--no-card m-b-30">
+                                        <table class="table table-borderless table-striped table-earning display nowrap" id="agent_table" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th><%= __('table.th.provider.code') %></th>
+                                                    <th><%= __('table.th.provider.type') %></th>
+                                                    <th><%= __('table.th.action') %></th>
+                                                    <th><%= __('table.th.status') %></th>
+                                                    <th><%= __('table.th.percent') %></th>                                                    
+                                                    <th><%= __('table.th.end.point') %></th>                                                    
+                                                    <th><%= __('table.th.total.games') %></th>
+                                                    <th><%= __('table.th.running.games') %></th>
+                                                    <th><%= __('table.th.checking.games') %></th>
+                                                    <th><%= __('table.th.updated.date') %></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="copyright">
+                                        <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" value="0" id="tmp_buff" name="tmp_buff"/>
+                <!-- END PAGE CONTAINER-->
+            </div>
+    
+    </div>
+    <%- include('../template/footer.ejs') -%>
+    <%- include('../template/global.ejs') -%>
+    <%- include('../template/providerModals.ejs') -%>
+    <script>       
+        $(document).ready(function () {   
+            $("#provider-selector").select2();
+        });
+        const role = "<%= session.auth.role%>";
+
+        const table =new DataTable('#agent_table', {
+            ajax: '/api/provider_list',
+            responsive: true,
+            columns: [
+            {
+                    class: 'dt-control',
+                    orderable: false,
+                    data: null,
+                    defaultContent: ''
+                },
+                { data: 'code' },
+                { data: 'type' },                        
+                {  
+                    "data": "name",  
+                    "render": function(data, type, row) {  
+                        
+                        const s = JSON.stringify(row);
+                        
+                        return role == 1 ? `<div>
+                            <button type='button' class='btn btn-primary' onclick='toggleDropdown(event)'><%= __('button.text.action') %></button>
+                            <div class="dropdown" style="display: none;">  
+                                <p onclick='modifyProvider(${s})'><i class='fas fa-edit'></i>&nbsp;&nbsp;<%= __('button.text.modify') %></p>  
+                                <p onclick='checkProvider("${row.code}")'><i class='fas fa-check'></i>&nbsp;&nbsp;<%= __('button.text.check.connection') %></p> 
+                                <p onclick='updateGames("${row.code}")'><i class='fas fa-recycle'></i>&nbsp;&nbsp;<%= __('button.text.update.games') %></p>  
+                                <p onclick='deleteProvider(${row.id})'><i class='fas fa-trash'></i>&nbsp;&nbsp;<%= __('button.text.delete') %></p>  
+                            </div>
+                        <div>` : ``;
+                    }  
+                },
+                {
+                    data: 'status',
+                    render: function(data, type, row) { 
+                        return role == 1 ? `<label class="switch switch-3d switch-primary mr-3">
+                            <input type="checkbox" id='chk-${row.id}' class="switch-input" ${data == 1 ? 'checked="true"': ''} onclick="changeStatus(${row.id}, '${row.code}')">
+                            <span class="switch-label"></span>
+                            <span class="switch-handle"></span>
+                        </label>` : `<label class="switch switch-3d switch-primary mr-3">
+                            <input type="checkbox" id='chk-${row.id}' class="switch-input" ${data == 1 ? 'checked="true"': ''} disabled>
+                            <span class="switch-label"></span>
+                            <span class="switch-handle"></span>
+                        </label>`;
+                    }   
+                },
+                { data: 'percent' },       
+                { data: 'endpoint' },       
+                { data: 'totalCount' },       
+                { data: 'runningCount'},
+                { data: 'checkingCount' },
+                { data: 'createdAt', render: function(data, type, row) { 
+                    
+                    return data?.substr(0, 16).replace("T", " ");
+                } },
+            ],
+            order: [[1, 'asc']],
+            processing: true,
+            serverSide: true,
+            info: false,
+            ordering: false,   
+            paging: false,
+            dom: 'lrtip',
+            
+        });
+        
+        
+        function openCreateModal() {
+            $("#providerCode").val("");
+            $("#providerName").val("");
+            //$("#providerType").val("");
+            $("#providerEndPoint").val("");
+            
+            $("#newModal").modal('show')
+        }
+
+        function modifyProvider(data) {
+            $("#providerCode").val(data.code);
+            $("#providerName").val(data.type);
+            //$("#providerType").val(data.agentCode);
+            $("#providerEndPoint").val(data.endpoint);
+
+            $("#tmp_buff").val(data.id)
+
+            $("#newModal").modal('show')
+        }
+
+        function deleteProvider(id) {
+            showConfirmAlert(`<%= __('msg.delete.provider.confirm') %>`, function () {
+                $.ajax({
+                    type: "POST",
+                    url: `/api/provider_delete`,
+                    data: {id},
+                    success: function (res) {        
+                        if (res.status) {
+                            table.ajax.reload();
+                        }
+                    },
+                });
+            });
+        }
+        function checkProvider(code) {
+            $.ajax({
+                type: "POST",
+                url: `/api/provider_check`,
+                data: {providerCode: code},
+                success: function (res) {
+                    if (res.status) {
+                        const result = res.result;
+
+                        if (result.status == 1) {
+                            toastr.success(`Success. ${result.time}ms elapsed`);
+                        } else {
+                            toastr.error(`<%= __('msg.failed.with.network.problem') %>`);
+                        }
+                    }
+                },
+            });
+        }
+        function updateGames(providerCode) {
+            $.ajax({
+                type: "POST",
+                url: `/api/game_create`,
+                data: {providerCode},
+                success: function (res) {
+                    if (res.status == 1) {
+                        table.ajax.reload();
+                    }
+                    else {
+                        toastr.error(`<%= __('msg.failed.with.network.problem') %>`);
+                    }
+                },
+            });
+        }
+        function changeStatus(id, code) {
+            const chk = $('#chk-'+id)[0].checked;
+
+            $.ajax({
+                type: "POST",
+                url: `/api/provider_update_status`,
+                data: {
+                    id,
+                    providerCode : code,
+                    status: chk == true ? 1: 0
+                },
+                success: function (res) {
+                    toastr.info(`<%= __('msg.status.updated') %>`);                    
+                }
+            }); 
+        }
+
+        $("#create_new_provider").click(function(e){
+            const providerCode = $("#providerCode").val();
+            const providerName = $("#providerName").val();
+            const providerType = $("#providerType").val();
+            const providerEndPoint = $("#providerEndPoint").val();
+          
+            const pid = $("#tmp_buff").val()
+            $.ajax({
+                type: "POST",
+                url: pid == 0 ? `/api/provider_create` : `/api/provider_update`,
+                data: {
+                    providerCode,
+                    providerName,
+                    providerType,
+                    providerEndpoint : providerEndPoint,
+                    id: pid,
+                },
+                success: function (res) {
+                    $("#newModal").modal("hide");
+                    if(res.status == 1) {
+                        toastr.info(`<%= __('msg.success') %>`);  
+                        table.ajax.reload(null, false)                   
+                    }
+                    else {
+                        toastr.error(res.msg);
+                    }
+                }
+            });                
+        })
+    </script>
+</body>
+
+</html>
+<!-- end document-->

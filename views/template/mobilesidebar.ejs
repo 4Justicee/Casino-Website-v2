@@ -1,0 +1,106 @@
+<aside class="menu-sidebar2 js-right-sidebar d-block d-lg-none">
+    <div class="logo">
+        <a href="#">
+            <img src="/images/icon/logo-white.png" alt="Cool Admin" />
+        </a>
+    </div>
+    <div class="menu-sidebar2__content js-scrollbar2">
+        <div class="account2">
+            <i class="fas fa-user" style="font-size:36px; cursor:pointer" onclick="showProfile();" ></i>
+            <h4 class="name" style="cursor:pointer" onclick="showProfile();"><%= session.auth.agentCode %></h4>
+            <a class="btn-sign-out" class="hand" style="cursor:pointer"><%= __('menu.sign.out') %></a>
+        </div>
+        <nav class="navbar-sidebar2">
+            <ul class="list-unstyled navbar__list">
+                <li class="<%= (page == 'dashboard')?'active':''%>">
+                    <a  href="/">
+                        <i class="fas fa-tachometer-alt"></i><%= __('menu.dashboard') %></a>                    
+                </li>
+                <li class="has-sub">
+                    <a class="js-arrow <%= (page == 'master_list'||page == 'master_transaction'||page == 'master_balance')?'open':''%>" href="#" >
+                        <i class="fas fa-address-book"></i><%= __('menu.agents') %></a>
+                    <ul class="list-unstyled navbar__sub-list js-sub-list" style="display: <%= (page == 'master_list'||page == 'master_transaction'||page == 'master_balance')?'block':'none'%>">
+                        <li class="<%= (page == 'master_list')?'active':''%>">
+                            <a href="/page/master_list" ><%= __('menu.management') %></a>
+                        </li>
+                        <li class="<%= (page == 'master_transaction')?'active':''%>">
+                            <a href="/page/master_transaction" ><%= __('menu.transactions') %></a>
+                        </li>
+                        <li class="<%= (page == 'master_balance')?'active':''%>">
+                            <a href="/page/master_balance"><%= __('menu.balance.history') %></a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="has-sub">
+                    <a class="js-arrow <%= (page == 'player_list'||page == 'player_exchange'||page == 'player_balance'||page == 'player_transaction')?'open':''%>" href="#">
+                        <i class="fas fa-users"></i><%= __('menu.users') %></a>
+                    <ul class="list-unstyled navbar__sub-list js-sub-list" style="display: <%= (page == 'player_list'||page == 'player_exchange'||page == 'player_balance'||page == 'player_transaction')?'block':'none'%>">
+                        <li class="<%= (page == 'player_list')?'active':''%>">
+                            <a href="/page/player_list"><%= __('menu.management') %></a>
+                        </li>
+                        <li class="<%= (page == 'player_exchange')?'active':''%>">
+                            <a href="/page/player_exchange"><%= __('menu.transactions') %></a>
+                        </li>
+                        <li class="<%= (page == 'player_balance')?'active':''%>">
+                            <a href="/page/player_balance"><%= __('menu.balance.history') %></a>
+                        </li>
+                        <li class="<%= (page == 'player_transaction')?'active':''%>">
+                            <a href="/page/player_transaction"><%= __('menu.game.history') %></a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="has-sub">
+                    <a class="js-arrow <%= (page == 'currency'||page == 'agent'||page == 'user'||page == 'provider'||page == 'game')?'open':''%>" href="#">
+                        <i class="fas fa-line-chart"></i><%= __('menu.statistics') %></a>
+                    <ul class="list-unstyled navbar__sub-list js-sub-list" style="display: <%= (page == 'currency'||page == 'agent'||page == 'user'||page == 'provider'||page == 'game')?'block':'none'%>">
+                        <li class="<%= (page == 'currency')?'active':''%>">
+                            <a href="/page/currency-stat" ><%= __('menu.currency') %></a>
+                        </li>
+                        <li class="<%= (page == 'agent')?'active':''%>">
+                            <a href="/page/agent-stat"><%= __('menu.agent') %></a>
+                        </li>
+                        <li class="<%= (page == 'user')?'active':''%>">
+                            <a href="/page/user-stat"><%= __('menu.user') %></a>
+                        </li>
+                        <li class="<%= (page == 'provider')?'active':''%>">
+                            <a href="/page/provider-stat"><%= __('menu.provider') %></a>
+                        </li>
+                        <li class="<%= (page == 'game')?'active':''%>">
+                            <a href="/page/game-stat"><%= __('menu.game') %></a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="has-sub">
+                    <a class="js-arrow <%= (page == 'provider_list'||page == 'game_run')?'open':''%>" href="#">
+                        <i class="fas fa-share-alt"></i><%= __('menu.provider') %></a>
+                    <ul class="list-unstyled navbar__sub-list js-sub-list" style="display: <%= (page == 'provider_list'||page == 'game_run')?'block':'none'%>">
+                        <li class="<%= (page == 'provider_list')?'active':''%>">
+                            <a href="/page/provider"><%= __('menu.management') %></a>
+                        </li>
+                        <li class="<%= (page == 'game_run')?'active':''%>">
+                            <a href="/page/game"><%= __('menu.game.launch') %></a>
+                        </li>
+                    </ul>
+                </li> 
+                <% if(session.showBilling) { %>
+                <li class="has-sub">
+                    <a class="js-arrow <%= (page == 'plan'||page == 'payment')?'open':''%>" href="#">
+                        <i class="zmdi zmdi-money-box"></i><%= __('menu.billing') %></a>
+                    <ul class="list-unstyled navbar__sub-list js-sub-list" style="display: <%= (page == 'plan'||page == 'payment')?'block':'none'%>">
+                        <li class="<%= (page == 'plan')?'active':''%>">
+                            <a href="/page/plan"><%= __('menu.price.plan') %></a>
+                        </li>
+                        <li class="<%= (page == 'payment')?'active':''%>">
+                            <a href="/page/payment"><%= __('menu.history') %></a>
+                        </li>
+                    </ul>
+                </li> 
+                <% } %>               
+                <li class="<%= (page == 'documentation')?'active':''%>">
+                    <a class="js-arrow <%= (page == 'documentation')?'open':''%>" href="/page/documentation">
+                        <i class="fas fa-book"></i><%= __('menu.documentation') %></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>

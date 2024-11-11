@@ -1,0 +1,95 @@
+<div class="modal fade" id="exchangeModal" tabindex="-1" role="dialog" aria-labelledby="exchangeModalLabel" aria-hidden="true"
+    data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exchangeModalLabel"><%= __('modal.title.user.exchange') %></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xl-6" style="margin-top:0.5rem">
+                        <input type="number" class="form-control" placeholder="<%= __('text.placeholder.balance') %>" id="balance" name="balance" autocomplete="off"/>
+                    </div>
+                    <div class="col-xl-6" style="margin-top:0.5rem">
+                        <select class="form-control" id="balance_exchange_type">
+                            <option value="1" ><%= __('select.option.deposit') %></option>
+                            <option value="0"><%= __('select.option.withdraw') %></option>
+                        </select>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= __('button.text.cancel') %></button>
+                <button type="button" class="btn btn-primary" id="make_exchange"><%= __('button.text.confirm') %></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="rtpModal" tabindex="-1" role="dialog" aria-labelledby="rtpModalLabel" aria-hidden="true"
+    data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rtpModalLabel"><%= __('modal.title.rtp.settings') %></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xl-4">
+                        <div class="form-group">
+                            <label for="totalDebit" class="control-label mb-1"><%= __('label.for.total.debit') %></label>
+                            <input id="totalDebit" name="totalDebit" type="text" class="form-control" aria-required="true" aria-invalid="false" value="100.00">
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <div class="form-group">
+                            <label for="totalCredit" class="control-label mb-1"><%= __('label.for.total.credit') %></label>
+                            <input id="totalCredit" name="totalCredit" type="text" class="form-control" aria-required="true" aria-invalid="false" value="100.00">
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <div class="form-group">
+                            <label for="realRtp" class="control-label mb-1"><%= __('label.for.real.rtp') %></label>
+                            <input id="realRtp" name="realRtp" type="text" class="form-control" aria-required="true" aria-invalid="false" value="100.00">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="form-group">
+                            <label for="rtp-selector" class="control-label mb-1"><%= __('label.for.target.rtp') %></label>
+                            <select class="form-control" id="rtp-selector">
+                                <option value="0">0 %</option>
+                                <option value="10">10 %</option>
+                                <option value="20">20 %</option>
+                                <option value="30">30 %</option>
+                                <option value="40">40 %</option>
+                                <option value="50">50 %</option>
+                                <option value="55">55 %</option>
+                                <option value="60">60 %</option>
+                                <option value="65">65 %</option>
+                                <option value="70">70 %</option>
+                                <option value="75">75 %</option>
+                                <option value="80">80 %</option>
+                                <option value="85">85 %</option>
+                                <option value="90">90 %</option>
+                                <option value="95">95 %</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= __('button.text.cancel') %></button>
+                <button type="button" class="btn btn-primary" id="rtp_save"><%= __('button.text.confirm') %></button>
+            </div>
+        </div>
+    </div>
+</div>

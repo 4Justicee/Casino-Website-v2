@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('../template/header.ejs') -%>
+    <style>
+    .dropdown {  
+        position: absolute;  
+        background-color: white;  
+        border: 1px solid #ddd;  
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);  
+        z-index: 1000;  
+        padding:1rem;
+    }  
+
+    .dropdown p {  
+        margin: 0;  
+        padding: 8px;  
+    }  
+
+    .dropdown p:hover {  
+        background-color: #f1f1f1;  
+    }  
+    </style>
+    <body class="animsition">
+        <div class="page-wrapper">
+            <!-- MENU SIDEBAR-->
+            <%- include('../template/sidebar.ejs',  {page: "master_list"}) -%>
+            <!-- END MENU SIDEBAR-->
+    
+            <!-- PAGE CONTAINER-->
+            <div class="page-container2">
+                <!-- HEADER DESKTOP-->
+                <%- include('../template/rightsidebar.ejs') -%>
+                <%- include('../template/mobilesidebar.ejs', {page: "master_list"}) -%>
+                <!-- END HEADER DESKTOP-->
+                <div class="page-loader__spin" style="display:none;"></div>
+                <!-- BREADCRUMB-->
+                <div class="main-content" style="padding-top:90px">
+                    <div style="display:flex; justify-content: right;margin-right:1rem; margin-bottom:1rem"><button class="btn btn-primary" onclick="openCreateModal();">+ <%= __('button.text.create.new.agent') %></button></div>
+                    <div class="section__content section__content--p30">
+                        <div class="container-fluid">
+                            <div class="row">
+                                
+                                <div class="col-lg-12" >
+                                    <div class="table-responsive table--no-card m-b-30">
+                                        <table class="table table-borderless table-striped table-earning display nowrap" id="agent_table" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th><%= __('table.th.agent.code') %></th>
+                                                    <th><%= __('table.th.agent.name') %></th>
+                                                    <th><%= __('table.th.action') %></th>
+                                                    <th><%= __('table.th.status') %></th>
+                                                    <th><%= __('table.th.percent') %></th>
+                                                    <th><%= __('table.th.currency') %></th>                                                    
+                                                    <th><%= __('table.th.api.type') %></th>                                                    
+                                                    <th class="text-right"><%= __('table.th.balance') %></th>                                                    
+                                                    <th><%= __('table.th.rtp') %></th>                                                    
+                                                    <th><%= __('table.th.providers') %></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="copyright">
+                                        <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" value="0" id="tmp_buff" name="tmp_buff"/>
+                <!-- END PAGE CONTAINER-->
+            </div>
+    
+    </div>
+    <%- include('../template/footer.ejs') -%>
+    <%- include('../template/global.ejs') -%>
+    <%- include('../template/modals.ejs') -%>
+    <script>       
+        $(document).ready(function () {   
+            const role = "<%= session.auth.role%>";
+            $("#provider-selector").select2();
+        });
+            
+        const table =new DataTable('#agent_table', {
+            ajax: '/api/agent_list',
+            responsive: true,
+            columns: [
+                {
+                    class: 'dt-control',
+                    orderable: false,
+                    data: null,
+                    defaultContent: ''
+                },
+                { data: 'agentCode' },
+                { data: 'agentName' },                        
+                {  
+                    "data": "parentId",  
+                    "render": function(data, type, row) {  
+                        const s = JSON.stringify(row);
+                        return `<div>
+                            <button type='button' class='btn btn-primary' onclick='toggleDropdown(event)'><%= __('button.text.action') %></button>
+                            <div class="dropdown" style="display: none;">  
+                                <p onclick='modifyAgent(${s})'><i class='fas fa-edit'></i>&nbsp;&nbsp;<%= __('button.text.modify') %></p>  
+                                <p onclick='deleteAgent(${row.id})'><i class='fas fa-trash'></i>&nbsp;&nbsp;<%= __('button.text.delete') %></p>  
+                                <p onclick='exchangeAgent(${row.id})'><i class='fas fa-recycle'></i>&nbsp;&nbsp;<%= __('button.text.exchange') %></p>  
+                                <p onclick='providerSettingAgent(${row.id}, "${row.providers}")'><i class='fas fa-cogs'></i>&nbsp;&nbsp;<%= __('button.text.provider.setting') %></p> 
+                                <p onclick='rtpSettingAgent(${row.id})'><i class='fas fa-gear'></i>&nbsp;&nbsp;<%= __('button.text.rtp.setting') %></p> 
+                            </div>
+                        <div>`;
+                    }  
+                },
+                {
+                    data: 'status',
+                    render: function(data, type, row) { 
+                        return `<label class="switch switch-3d switch-primary mr-3">
+                            <input type="checkbox" id='chk-${row.id}' class="switch-input" ${data == 1 ? 'checked="true"': ''} onclick="changeStatus(${row.id})">
+                            <span class="switch-label"></span>
+                            <span class="switch-handle"></span>
+                        </label>`;
+                    }   
+                },
+                { data: 'percent' },
+                { data: 'currency' },
+                { 
+                    data: 'apiType',
+                    render: function(data, type, row) { 
+                        return data == 0 ? `seamless`: `transfer`;
+                    }
+                },
+                
+                {
+                    data: 'balance', 
+                    render: function(data, type, row) { 
+                        return data.toLocaleString();
+                    }
+                },       
+                { data: 'rtp' },
+                
+                { data: 'providers' },
+            ],
+            order: [[1, 'asc']],
+            processing: true,
+            serverSide: true,
+            info: false,
+            ordering: false,   
+            paging: false,
+            dom: 'lrtip'
+        });
+        
+
+        function changeStatus(rid) {
+            const chk = $('#chk-'+rid)[0].checked;
+
+            $.ajax({
+                type: "POST",
+                url: `/api/agent_update`,
+                data: {
+                    agentId: rid,
+                    status: chk == true ? 1: 0
+                },
+                success: function (res) {
+                    toastr.info(`<%= __('msg.status.updated') %>`);                    
+                }
+            });                
+        }
+        function toggleDropdown(event) {  
+            // Prevents propagation of the click event  
+            event.stopPropagation();  
+
+            // Get all dropdowns  
+            const dropdowns = document.querySelectorAll('.dropdown');  
+            
+            // Close all dropdowns except for the one clicked  
+            dropdowns.forEach(dropdown => {  
+                if (dropdown !== event.currentTarget.nextElementSibling) {  
+                    dropdown.style.display = 'none';  
+                }  
+            });  
+
+            // Toggle the clicked dropdown  
+            const dropdown = event.currentTarget.nextElementSibling;  
+            dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';  
+        }  
+        function openCreateModal() {
+            $("#parentAgent").val(0);
+            $("#agentName").val("");
+            $("#agentCode").val("");
+            $("#percent").val(0);
+            $("#memo").val("");
+            $("#password").val("");
+            $("#currency").val("USD");
+            $("#apiType").val(0);
+            $("#endpoint").val("");
+            $("#tmp_buff").val(0)
+
+            $("#staticModal").modal('show')
+        }
+
+        function modifyAgent(data) {
+            $("#parentAgent").val(data.parentId);
+            $("#agentName").val(data.agentName);
+            $("#agentCode").val(data.agentCode);
+            $("#percent").val(data.percent);
+            $("#memo").val(data.memo);
+            $("#currency").val(data.currency);
+            $("#password").val("");
+            $("#apiType").val(data.apiType);
+            $("#endpoint").val(data.siteEndPoint);
+            $("#tmp_buff").val(data.id)
+
+            $("#staticModal").modal('show')
+        }
+
+        function deleteAgent(id) {
+            showConfirmAlert(`<%= __('msg.delete.agent.confirm') %>`, function () {
+                $.ajax({
+                    type: "POST",
+                    url: `/api/agent_remove`,
+                    data: {id},
+                    success: function (res) {        
+                        if (res.status) {
+                            
+                        }
+                    },
+                });
+            });
+        }
+        function exchangeAgent(id) {
+            $("#balance").val("");
+            $("#tmp_buff").val(id)
+            $("#exchangeModal").modal('show');
+        }
+        function providerSettingAgent(id, currentProviders) {
+            $("#tmp_buff").val(id)
+            const a = currentProviders.split(",");
+            let str = ``;
+            let b;
+            <% for (let i = 0; i < providers.length; i++) { %> 
+               b = "<%= providers[i].code%>";
+               if(a.includes(b)) {
+                str += `<option selected>${b}<option>`;
+               }
+               else {
+                str+=`<option>${b}<option>`;
+               }
+            <% } %>
+            $("#provider-selector").html(str);
+            $("#providersModal").modal('show');
+        }
+        function rtpSettingAgent(id) {
+            $("#tmp_buff").val(id)
+            $("#rtpModal").modal('show');
+        }
+
+        $("#make_new_agent").click(function(e){
+            const pid = $("#parentAgent").val();
+            const agentName = $("#agentName").val();
+            const agentCode = $("#agentCode").val();
+            const password = $("#password").val();
+            const percent = $("#percent").val();
+            const memo = $("#memo").val();
+            const currency = $("#currency").val();
+            const apiType = $("#apiType").val();
+            const endpoint = $("#endpoint").val();
+            const agentId = $("#tmp_buff").val()
+            $.ajax({
+                type: "POST",
+                url: agentId == 0 ? `/api/agent_create` : `/api/agent_update`,
+                data: {
+                    pid,
+                    agentName,
+                    agentCode,
+                    password,
+                    percent,
+                    memo,
+                    currency,
+                    apiType,
+                    endpoint,
+                    agentId,
+                },
+                success: function (res) {
+                    $("#staticModal").modal("hide");
+                    if(res.status == 1) {
+                        toastr.info(`<%= __('msg.success') %>`);  
+                        table.ajax.reload(null, false)                   
+                    }
+                    else {
+                        toastr.error(res.msg);
+                    }
+                }
+            });                
+        })
+        $("#make_exchange").click(function(e) {
+            $(this).attr('disabled','true');
+
+            const requestData = {
+                agentId: $("#tmp_buff").val(),
+                chargeType: $("#balance_exchange_type").val(),
+                amount: $("#balance").val(),
+            };
+            $.ajax({
+                type: "POST",
+                url: `/api/agent_exchange`,
+                data: requestData,
+                success: function (res) {
+                    if (res.status) {
+                        $("#exchangeModal").modal("hide");
+                        table.ajax.reload();
+                    }
+                    else {
+                        toastr.error(res.msg);
+                    }
+                    $("#make_exchange").removeAttr("disabled");
+                },
+                error: function () {
+                    $("#make_exchange").removeAttr("disabled");
+                },
+            });
+        });
+        $("#provider_save").click(function(e) {
+            const providers = $("#provider-selector").val();
+            const agentId = $("#tmp_buff").val();
+            if(providers == null || providers.length == 0) {
+                toastr.error(`<%= __('msg.provider.select') %>`);
+                return;
+            }
+
+            const data = {
+                agentId,
+                providers: providers.join()
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/api/agent_update_provider",
+                data:data,
+                success: function (res) {            
+                    if (res.status) {
+                        $("#providersModal").modal("hide");
+                        table.ajax.reload()
+                    }
+                },
+                timeout: 60000 // sets timeout to 1min
+            });
+        })
+        $("#rtp_save").click(function(e) {
+            const rtpValue = $("#rtp-selector").val();
+            const agentId = $("#tmp_buff").val();
+
+
+            const data = {
+                agentId,
+                rtp: Number(rtpValue),
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/api/agent_update_rtp",
+                data:data,
+                success: function (res) {            
+                    if (res.status) {
+                        $("#rtpModal").modal("hide");
+                        table.ajax.reload()
+                    }
+                },
+                timeout: 60000 // sets timeout to 1min
+            });
+        })
+    </script>
+</body>
+
+</html>
+<!-- end document-->

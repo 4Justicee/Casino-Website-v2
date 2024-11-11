@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('./header.ejs') -%>
+    <style>
+    .dropdown {  
+        position: absolute;  
+        background-color: white;  
+        border: 1px solid #ddd;  
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);  
+        z-index: 1000;  
+        padding:1rem;
+    }  
+
+    .dropdown p {  
+        margin: 0;  
+        padding: 8px;  
+    }  
+
+    .dropdown p:hover {  
+        background-color: #f1f1f1;  
+    }  
+    </style>
+    <body class="animsition">
+        <div class="page-wrapper">
+            <!-- MENU SIDEBAR-->
+            <%- include('./sidebar.ejs',  {page: "documentation"}) -%>
+            <!-- END MENU SIDEBAR-->
+    
+            <!-- PAGE CONTAINER-->
+            <div class="page-container2">
+                <!-- HEADER DESKTOP-->
+                <%- include('../template/rightsidebar.ejs') -%>
+                <%- include('../template/mobilesidebar.ejs', {page: "documentation"}) -%>
+                <!-- END HEADER DESKTOP-->
+                <div class="page-loader__spin" style="display:none;"></div>
+                <!-- BREADCRUMB-->
+                <div class="main-content">                    
+                    <div class="section__content section__content--p30">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4>Transfer API</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="custom-tab">    
+                                                <nav>
+                                                    <div class="nav nav-tabs" id="nav-t-tab" role="tablist">
+                                                        <a class="nav-item nav-link active" data-toggle="tab" href="#t_createuser" role="tab" aria-controls="custom-nav-home"
+                                                         aria-selected="true"><%= __('document.create.user') %></a>
+                                                        <a class="nav-item nav-link" data-toggle="tab" href="#t_gamerun" role="tab" aria-controls="custom-nav-profile"
+                                                         aria-selected="false"><%= __('document.game.launch') %></a>
+                                                        <a class="nav-item nav-link" data-toggle="tab" href="#t_deposit" role="tab" aria-controls="custom-nav-contact"
+                                                         aria-selected="false"><%= __('document.deposit') %></a>
+                                                        <a class="nav-item nav-link" data-toggle="tab" href="#t_withdraw" role="tab" aria-controls="custom-nav-contact"
+                                                         aria-selected="false"><%= __('document.withdraw') %></a>
+                                                        <a class="nav-item nav-link" data-toggle="tab" href="#t_info" role="tab" aria-controls="custom-nav-contact"
+                                                         aria-selected="false"><%= __('document.info') %></a>
+                                                        <a class="nav-item nav-link" data-toggle="tab" href="#t_providers" role="tab" aria-controls="custom-nav-contact"
+                                                         aria-selected="false"><%= __('document.providers') %></a>
+                                                        <a class="nav-item nav-link" data-toggle="tab" href="#t_games" role="tab" aria-controls="custom-nav-contact"
+                                                         aria-selected="false"><%= __('document.games') %></a>
+                                                         <a class="nav-item nav-link" data-toggle="tab" href="#t_history" role="tab" aria-controls="custom-nav-contact"
+                                                         aria-selected="false"><%= __('document.history') %></a>
+                                                         <a class="nav-item nav-link" data-toggle="tab" href="#t_payments" role="tab" aria-controls="custom-nav-contact"
+                                                         aria-selected="false"><%= __('document.payments') %></a>
+                                                    </div>
+                                                </nav>
+                                                <div class="tab-content pl-3 pt-2" id="nav-t-tabContent">
+                                                    <div class="tab-pane fade show active" id="t_createuser" role="tabpanel" aria-labelledby="t_createuser-tab">
+                                                        <p style="color:#ff5050; padding:1rem 0rem"><span class="badge badge-primary">POST</span>&nbsp;&nbsp;&nbsp;&nbsp;http://127.0.0.1:5555/api/playerCreate</p>
+                                                        
+                                                        <p><%= __('document.all.request') %></p>
+                                                        <p><%= __('document.you.can') %></p>
+                                                        <div style="display:flex;justify-content: space-between;"><p><%= __('document.request.example') %>: </p><button type="button" class="btn btn-outline-primary btn-sm" onclick="copyTCreateUserCode();" id="btn-copy-tcreateuser">
+                                                            <i class="fa fa-copy"></i>&nbsp; <%= __('document.copy.code') %></button></div>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre id="t-createuser-code">
+    {
+        "masterCode": "superAdmin",
+        "masterToken": "1816f360b3e6addfd5d3c56a64cad702",
+        "playerCode": "test",
+        "depositAmount": 1000
+    }
+                                                            </pre>
+                                                        </div>
+                                                        <p><%= __('document.response.example') %>: </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre >
+    // Success:
+    {
+        "status": 1,
+        "msg": "SUCCESS",
+        "masterCode": "superAdmin",
+        "masterBalance": 100000,
+        "masterType": "Transfer",
+        "playerCode": "test",
+        "playerBalance": 1000,
+        "playerCreated": true,
+        "playerDeposit": true,
+        "currency": "USD"
+    }
+
+    // Failure:
+    {
+        "status": 0,
+        "msg": "DUPLICATED_USER"
+    }
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="t_gamerun" role="tabpanel" aria-labelledby="t_gamerun-tab">
+                                                        <p style="color:#ff5050; padding:1rem 0rem"><span class="badge badge-primary">POST</span>&nbsp;&nbsp;&nbsp;&nbsp;http://127.0.0.1:5555/api/gameRun</p>
+                                                        <p><%= __('document.all.request') %></p>
+                                                        <p><%= __('document.you.can') %></p>
+
+                                                        <div style="display:flex;justify-content: space-between;"><p><%= __('document.request.example') %>: </p><button type="button" class="btn btn-outline-primary btn-sm" onclick="copyTRunGame();" id="btn-copy-trungame">
+                                                            <i class="fa fa-copy"></i>&nbsp; <%= __('document.copy.code') %></button></div>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre id="t-rungame-code">
+    {
+        "masterCode": "superAdmin",
+        "masterToken": "1816f360b3e6addfd5d3c56a64cad702",
+        "playerCode": "test", 
+        "gameType": "slot",
+        "providerCode": "PRAGMATIC",
+        "gameCode": "vs20doghouse",
+        "lang": "en",
+        "depositAmount": 1000 
+    }
+                                                            </pre>
+                                                        </div>
+                                                        <p><%= __('document.response.example') %>: </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre >
+    // Success:
+    {
+        "status": 1,
+        "msg": "SUCCESS",
+        "launchUrl": "http://xk5lk50.game.net/...",
+        "masterCode": "superAdmin",
+        "masterBalance": 100000,
+        "masterType": "Transfer",
+        "playerCode": "test",
+        "playerBalance": 1000,
+        "playerCreated": true,
+        "playerDeposit": true,
+        "currency": "USD",
+        "lang": "en"
+    }
+
+    // Failure:
+    {
+        "status": 0,
+        "msg": "INVALID_PROVIDER"
+    }
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="t_deposit" role="tabpanel" aria-labelledby="t_deposit-tab">
+                                                        <p style="color:#ff5050; padding:1rem 0rem"><span class="badge badge-primary">POST</span>&nbsp;&nbsp;&nbsp;&nbsp;http://127.0.0.1:5555/api/playerDeposit</p>
+                                                        <p><%= __('document.all.request') %></p>
+                                                        <p><%= __('document.you.can') %></p>
+
+                                                        <div style="display:flex;justify-content: space-between;"><p><%= __('document.request.example') %>: </p><button type="button" class="btn btn-outline-primary btn-sm" onclick="copyTDeposit();" id="btn-copy-tdeposit">
+                                                            <i class="fa fa-copy"></i>&nbsp; <%= __('document.copy.code') %></button></div>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre id="t-deposit-code">
+    {
+        "masterCode": "superAdmin",
+        "masterToken": "1816f360b3e6addfd5d3c56a64cad702",
+        "playerCode": "test",
+        "amount": 10000
+    }
+                                                            </pre>
+                                                        </div>
+                                                        <p><%= __('document.response.example') %>: </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre >
+    // Success:
+    {
+        "status": 1, 
+        "msg": "SUCCESS",
+        "masterCode": "superAdmin",
+        "masterBalance": 990000,
+        "masterType": "Transfer",
+        "playerCode": "test",
+        "playerBalance": 10000,
+        "depositAmount": 10000,
+        "currency": "USD",
+        "orderNo": 350
+    }
+
+    // Failure:
+    {
+        "status": 0,
+        "msg": "INSUFFICIENT_AGENT_FUNDS"
+    }
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="t_withdraw" role="tabpanel" aria-labelledby="t_withdraw-tab">
+                                                        <p style="color:#ff5050; padding:1rem 0rem"><span class="badge badge-primary">POST</span>&nbsp;&nbsp;&nbsp;&nbsp;http://127.0.0.1:5555/api/playerWithdraw</p>
+                                                        <p><%= __('document.all.request') %></p>
+                                                        <p><%= __('document.you.can') %></p>
+
+                                                        <div style="display:flex;justify-content: space-between;"><p><%= __('document.request.example') %>: </p><button type="button" class="btn btn-outline-primary btn-sm" onclick="copyTWithdraw();" id="btn-copy-twithdraw">
+                                                            <i class="fa fa-copy"></i>&nbsp; <%= __('document.copy.code') %></button></div>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre id="t-withdraw-code">
+    {
+        "masterCode": "superAdmin",
+        "masterToken": "1816f360b3e6addfd5d3c56a64cad702",
+        "playerCode": "test",
+        "amount": 10000 // [Optional] If you omit the account, exchange all the user's money.
+    }
+                                                            </pre>
+                                                        </div>
+                                                        <p><%= __('document.response.example') %>: </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre >
+    // Success:
+    {
+        "status": 1, 
+        "msg": "SUCCESS",
+        "masterCode": "superAdmin",
+        "masterBalance": 990000,
+        "masterType": "Transfer",
+        "playerCode": "test",
+        "playerBalance": 0,
+        "withdrawAmount":10000,
+        "currency": "USD",
+        "orderNo": 351
+    }
+
+    // Failure:
+    {
+        "status": 0,
+        "msg": "INSUFFICIENT_AGENT_FUNDS"
+    }
+                                                            </pre>
+                                                        </div>
+
+                                                        <p style="color:#ff5050; padding:1rem 0rem"><span class="badge badge-primary">POST</span>&nbsp;&nbsp;&nbsp;&nbsp;http://127.0.0.1:5555/api/playerWithdrawAll</p>
+                                                        <div style="display:flex;justify-content: space-between;"><p><%= __('document.request.example') %>: </p><button type="button" class="btn btn-outline-primary btn-sm" onclick="copyTWithdrawAll();" id="btn-copy-twithdrawall">
+                                                            <i class="fa fa-copy"></i>&nbsp; <%= __('document.copy.code') %></button></div>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre id="t-withdrawall-code">
+    {
+        "masterCode": "superAdmin",
+        "masterToken": "1816f360b3e6addfd5d3c56a64cad702",
+    }
+                                                            </pre>
+                                                        </div>
+                                                        <p><%= __('document.response.example') %>: </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre >
+    // Success:
+    {
+        "status": 1,
+        "msg": "SUCCESS",
+        "masterCode": "superAdmin",
+        "masterBalance": 990000,
+        "masterType": "Transfer",
+        "currency": "USD",
+        "playerList": [
+            {
+                "playerCode": "test",
+                "withdrawAmount": 20000,
+                "userBalance": 0
+            },
+            {
+                "playerCode": "test2",
+                "withdrawAmount": 56850,
+                "playerBalance": 0
+            }
+        ]
+    }
+
+
+    // Failure:
+    {
+        "status": 0,
+        "msg": "INVALID_PARAMETER"
+    }
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="t_info" role="tabpanel" aria-labelledby="t_info-tab">
+                                                        <p style="color:#ff5050; padding:1rem 0rem"><span class="badge badge-primary">POST</span>&nbsp;&nbsp;&nbsp;&nbsp;http://127.0.0.1:5555/api/info</p>
+                                                        
+                                                        <p><%= __('document.all.request') %></p>
+                                                        <p><%= __('document.you.can') %></p>
+                                                        <div style="display:flex;justify-content: space-between;"><p><%= __('document.request.example') %>: </p><button type="button" class="btn btn-outline-primary btn-sm" onclick="copyTInfo();" id="btn-copy-tinfo">
+                                                            <i class="fa fa-copy"></i>&nbsp; <%= __('document.copy.code') %></button></div>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre id="t-info-code">
+    {
+        "masterCode": "superAdmin",
+        "masterToken": "1816f360b3e6addfd5d3c56a64cad702",
+        "playerCode": "test" // [Optional]
+    }
+                                                            </pre>
+                                                        </div>
+                                                        <p><%= __('document.response.example') %>: </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre >
+    // Success:
+    {
+        "status": 1,
+        "msg": "SUCCESS",
+        "masterCode": "superAdmin",
+        "masterBalance": 1000000,
+        "masterType": "Transfer",
+        "masterTotalDebit": 100000,
+        "masterTotalCredit": 70000,
+        "masterTargetRtp": 95,
+        "masterRealRtp": 70,
+        "masterCreatedAt": "2023-04-26T07:00:07.000Z",
+        "currency": "USD",
+        "playerList": [
+            {
+                "playerCode": "test",
+                "playerBalance": 1000000,
+                "playerTotalDebit": 100000,
+                "playerTotalCredit": 70000,
+                "playerTargetRtp": 95,
+                "playerRealRtp": 70,
+                "playerCreatedAt": "2023-08-12T02:57:48.000Z"
+            },
+            {
+                "playerCode": "test1",
+                "playerBalance": 1000000,
+                "playerTotalDebit": 100000,
+                "playerTotalCredit": 80000,
+                "playerTargetRtp": 90,
+                "playerRealRtp": 80,
+                "playerCreatedAt": "2023-08-12T02:57:48.000Z"
+            }
+        ]
+    }
+
+
+    // Failure:
+    {
+        "status": 0,
+        "msg": "INVALID_PARAMETER"
+    }
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="t_providers" role="tabpanel" aria-labelledby="t_providers-tab">
+                                                        <p style="color:#ff5050; padding:1rem 0rem"><span class="badge badge-primary">POST</span>&nbsp;&nbsp;&nbsp;&nbsp;http://127.0.0.1:5555/api/providerList</p>
+                                                        
+                                                        <p><%= __('document.all.request') %></p>
+                                                        <p><%= __('document.you.can') %></p>
+                                                        <div style="display:flex;justify-content: space-between;"><p><%= __('document.request.example') %>: </p><button type="button" class="btn btn-outline-primary btn-sm" onclick="copyTProvider();" id="btn-copy-tprovider">
+                                                            <i class="fa fa-copy"></i>&nbsp; <%= __('document.copy.code') %></button></div>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre id="t-provider-code">
+    {
+        "masterCode": "superAdmin",
+        "masterToken": "1816f360b3e6addfd5d3c56a64cad702",
+        "gameType": "slot" // "casino"
+    }
+                                                            </pre>
+                                                        </div>
+                                                        <p><%= __('document.response.example') %>: </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre >
+    // Success:
+    {
+        "status": 1,
+        "msg": "SUCCESS",
+        "providers": [
+            {
+                "type": "slot",
+                "code": "PRAGMATIC",
+                "name": "Pragmatic Play",
+                "backoffice": "self"
+            },
+            ...
+        ]
+    }
+
+    // Failure:
+    {
+        "status": 0,
+        "msg": "INTERNAL_ERROR"
+    }
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="t_games" role="tabpanel" aria-labelledby="t_games-tab">
+                                                        <p style="color:#ff5050; padding:1rem 0rem"><span class="badge badge-primary">POST</span>&nbsp;&nbsp;&nbsp;&nbsp;http://127.0.0.1:5555/api/gameList</p>
+                                                        
+                                                        <p><%= __('document.all.request') %></p>
+                                                        <p><%= __('document.you.can') %></p>
+                                                        <div style="display:flex;justify-content: space-between;"><p><%= __('document.request.example') %>: </p><button type="button" class="btn btn-outline-primary btn-sm" onclick="copyTGame();" id="btn-copy-tgame">
+                                                            <i class="fa fa-copy"></i>&nbsp; <%= __('document.copy.code') %></button></div>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre id="t-game-code">
+    {
+        "masterCode": "superAdmin",
+        "masterToken": "1816f360b3e6addfd5d3c56a64cad702",
+        "providerCode": "PRAGMATIC",
+        "lang": "en"
+    }
+                                                            </pre>
+                                                        </div>
+                                                        <p><%= __('document.response.example') %>: </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre >
+    // Success:
+    {
+        "status": 1,
+        "msg": "SUCCESS",
+        "games": [
+            {
+                "id": 1,
+                "sort": 0,
+                "lang": "en",
+                "game_code": "vs243mwarrior",
+                "game_name": "Monkey Warrior",
+                "banner": "https://.../vs20doghouse.png",
+                "status": 1 // Available
+            },
+            {
+                "id": 2,
+                "sort": 0,
+                "lang": "en",
+                "game_code": "vs20doghouse",
+                "game_name": "The Dog House",
+                "banner": "https://.../vs243mwarrior.png",
+                "status": 0 // Not available
+            }
+        ]
+    }
+
+    // Failure:
+    {
+        "status": 0,
+        "msg": "INTERNAL_ERROR"
+    }
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="t_history" role="tabpanel" aria-labelledby="t_history-tab">
+                                                        <p style="color:#ff5050; padding:1rem 0rem"><span class="badge badge-primary">POST</span>&nbsp;&nbsp;&nbsp;&nbsp;http://127.0.0.1:5555/api/getLogByDate</p>
+                                                        
+                                                        <p><%= __('document.all.request') %></p>
+                                                        <p><%= __('document.you.can') %></p>
+                                                        <div style="display:flex;justify-content: space-between;"><p><%= __('document.request.example') %>: </p><button type="button" class="btn btn-outline-primary btn-sm" onclick="copyTDateLog();" id="btn-copy-tdatelog">
+                                                            <i class="fa fa-copy"></i>&nbsp; <%= __('document.copy.code') %></button></div>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre id="t-datelog-code">
+    {
+        "masterCode": "superAdmin",
+        "masterToken": "1816f360b3e6addfd5d3c56a64cad702",
+        "gameType": "slot",
+        "playerCode": "test",  
+        "start": "2022-09-29 00:00:00",
+        "end": "2022-09-30 23:59:00",
+        "page": 0,
+        "length": 1000,
+        "search": "" 
+    }
+                                                            </pre>
+                                                        </div>
+                                                        <p><%= __('document.response.example') %>: </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre >
+    // Success
+    {
+        "status": 1,
+        "totalCount": 112, // You can get up to 1000 histories.
+        "page": 0,
+        "length": 10,
+        "slot": [
+            {
+                "historyId": 245,
+                "masterCode": "superAdmin",
+                "playerCode": "test",
+                "providerCode": "PRAGMATIC",
+                "gameCode": "vs20doghouse",
+                "type": "BASE",
+                "bet": 2000,
+                "win": 0,
+                "txnId": "64a83f2fc597acc9004eec52c3f84c30",
+                "txnType": "debit_credit", // debit, credit
+                "playerBeforeBalance": 1741708,
+                "playerAfterBalance": 1739708,
+                "masterBeforeBalance": 98981676,
+                "masterAfterBalance": 98981676,
+                "createdAt": "2022-09-29T12:50:42.000Z"
+            },
+            ...
+        ]
+    }
+
+    // Failure:
+    {
+        "status": 0,
+        "error": "INVALID_PARAMETER"
+    }
+
+
+                                                            </pre>
+                                                        </div>
+
+                                                        <p style="color:#ff5050; padding:1rem 0rem"><span class="badge badge-primary">POST</span>&nbsp;&nbsp;&nbsp;&nbsp;http://127.0.0.1:5555/api/getLogById</p>
+                                                        <div style="display:flex;justify-content: space-between;"><p><%= __('document.request.example') %>: </p><button type="button" class="btn btn-outline-primary btn-sm" onclick="copyTIdLog();" id="btn-copy-tidlog">
+                                                            <i class="fa fa-copy"></i>&nbsp; <%= __('document.copy.code') %></button></div>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre id="t-idlog-code">
+    {
+        "masterCode": "superAdmin",
+        "masterToken": "1816f360b3e6addfd5d3c56a64cad702",
+        "playerCode": "test", 
+        "gameType": "slot",
+        "lastHistoryId": 13500
+    }
+                                                            </pre>
+                                                        </div>
+                                                        <p><%= __('document.response.example') %>: </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre >
+    // Success
+    {
+        "status": 1,
+        "totalCount": 112, // You can get up to 1000 histories.
+        "startHistoryId": 13501,
+        "lastHistoryId": 13613,
+        "slot": [ 
+            {
+                "historyId": 13501,
+                "masterCode": "superAdmin",
+                "playerCode": "test",
+                "providerCode": "PRAGMATIC",
+                "gameCode": "vs20doghouse",
+                "type": "BASE",
+                "bet": 2000,
+                "win": 0,
+                "txnId": "64a83f2fc597acc9004eec52c3f84c30",
+                "txnType": "debit_credit", // debit, credit
+                "playerBeforeBalance": 1741708,
+                "playerAfterBalance": 1739708,
+                "masterBeforeBalance": 98981676,
+                "masterAfterBalance": 98981676,
+                "createdAt": "2022-09-29T12:50:42.000Z"
+            },
+            ...
+        ]
+    }
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="t_payments" role="tabpanel" aria-labelledby="t_payments-tab">
+                                                        <p style="color:#ff5050; padding:1rem 0rem"><span class="badge badge-primary">POST</span>&nbsp;&nbsp;&nbsp;&nbsp;http://127.0.0.1:5555/api/getExchangeHistory</p>
+                                                        
+                                                        <p><%= __('document.all.request') %></p>
+                                                        <p><%= __('document.you.can') %></p>
+                                                        <div style="display:flex;justify-content: space-between;"><p><%= __('document.request.example') %>: </p><button type="button" class="btn btn-outline-primary btn-sm" onclick="copyTExchange();" id="btn-copy-texchange">
+                                                            <i class="fa fa-copy"></i>&nbsp; <%= __('document.copy.code') %></button></div>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre id="t-exchange-code">
+    {
+        "masterCode": "superAdmin",
+        "masterToken": "1816f360b3e6addfd5d3c56a64cad702",
+        "playerCode": "test",  
+        "start": "2022-09-29 00:00:00",
+        "end": "2022-09-30 23:59:00",
+        "page": 0,
+        "length": 1000,
+    }
+                                                            </pre>
+                                                        </div>
+                                                        <p><%= __('document.response.example') %>: </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre >
+    // Success
+    {
+        "status": 1,
+        "totalCount": 4, // You can get up to 1000 histories.
+        "page": 0,
+        "length": 1000,
+        "slot": [
+            {
+                "historyId": 310,
+                "masterCode": "superAdmin",
+                "playerCode": "test",
+                "chargeType": 1, // 1: deposit, 0: withdraw
+                "chargeAmount": 1000000,
+                "masterBeforeBalance": 102019658,
+                "masterAfterBalance": 101019658,
+                "playerBeforeBalance": 0,
+                "playerAfterBalance": 1000000,
+                "createdAt": "2022-09-29T12:50:42.000Z"
+            },
+            ...
+        ]
+    }
+
+    // Failure:
+    {
+        "status": 0,
+        "error": "INVALID_PARAMETER"
+    }
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                </div>    
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                         
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4>Seamless API</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="custom-tab">    
+                                                <nav>
+                                                    <div class="nav nav-tabs" id="nav-s-tab" role="tablist">
+                                                        <a class="nav-item nav-link active" data-toggle="tab" href="#s-rungame" role="tab" 
+                                                         aria-selected="true"><%= __('document.game.launch') %></a>
+                                                        <a class="nav-item nav-link" data-toggle="tab" href="#s-info" role="tab" 
+                                                         aria-selected="false"><%= __('document.info') %></a>
+                                                        <a class="nav-item nav-link" data-toggle="tab" href="#s-providers" role="tab" 
+                                                         aria-selected="false"><%= __('document.providers') %></a>
+                                                        <a class="nav-item nav-link" data-toggle="tab" href="#s-games" role="tab" 
+                                                         aria-selected="false"><%= __('document.games') %></a>
+                                                        <a class="nav-item nav-link" data-toggle="tab" href="#s-bcallback" role="tab" 
+                                                         aria-selected="false"><%= __('document.balance.callback') %><span style="color:red">*</span></a>
+                                                        <a class="nav-item nav-link" data-toggle="tab" href="#s-gcallback" role="tab" 
+                                                         aria-selected="false"><%= __('document.game.callback') %><span style="color:red">*</span></a>
+                                                    </div>
+                                                </nav>
+                                                <div class="tab-content pl-3 pt-2" id="nav-s-tabContent">
+                                                    <div class="tab-pane fade show active" id="s-rungame" role="tabpanel" aria-labelledby="s-rungame-tab">
+                                                        <p style="color:#ff5050; padding:1rem 0rem"><span class="badge badge-primary">POST</span>&nbsp;&nbsp;&nbsp;&nbsp;http://127.0.0.1:5555/api/gameRun</p>
+                                                        
+                                                        <p><%= __('document.all.request') %></p>
+                                                        <p><%= __('document.you.can') %></p>
+                                                        <div style="display:flex;justify-content: space-between;"><p><%= __('document.request.example') %>: </p><button type="button" class="btn btn-outline-primary btn-sm" onclick="copySGameRun();" id="btn-copy-sgamerun">
+                                                            <i class="fa fa-copy"></i>&nbsp; <%= __('document.copy.code') %></button></div>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre id="s-gamerun-code">
+    {
+        "masterCode": "superAdmin",
+        "masterToken": "1816f360b3e6addfd5d3c56a64cad702",
+        "playerCode": "test", 
+        "gameType": "slot",
+        "providerCode": "PRAGMATIC",
+        "gameCode": "vs20doghouse",
+        "lang": "en",
+        "playerBalance": 1000
+    }
+                                                            </pre>
+                                                        </div>
+                                                        <p><%= __('document.response.example') %>: </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre >
+    // Success:
+    {
+        "status": 1,
+        "msg": "SUCCESS",
+        "launchUrl": "http://xk5lk50.game.net/...",
+        "masterCode": "superAdmin",
+        "masterBalance": 100000,
+        "masterType": "Transfer",
+        "playerCode": "test",
+        "playerBalance": 1000,
+        "playerCreated": true,
+        "playerDeposit": true,
+        "currency": "USD",
+        "lang": "en"
+    }
+
+    // Failure:
+    {
+        "status": 0,
+        "msg": "INVALID_PROVIDER"
+    }
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="s-info" role="tabpanel" aria-labelledby="s-info-tab">
+                                                        <p style="color:#ff5050; padding:1rem 0rem"><span class="badge badge-primary">POST</span>&nbsp;&nbsp;&nbsp;&nbsp;http://127.0.0.1:5555/api/info</p>
+                                                        
+                                                        <p><%= __('document.all.request') %></p>
+                                                        <p><%= __('document.you.can') %></p>
+                                                        <div style="display:flex;justify-content: space-between;"><p><%= __('document.request.example') %>: </p><button type="button" class="btn btn-outline-primary btn-sm" onclick="copySInfo();" id="btn-copy-sinfo">
+                                                            <i class="fa fa-copy"></i>&nbsp; <%= __('document.copy.code') %></button></div>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre id="s-info-code">
+    {
+        "masterCode": "superAdmin",
+        "masterToken": "1816f360b3e6addfd5d3c56a64cad702",
+        "playerCode": "test" // [Optional]
+    }
+                                                            </pre>
+                                                        </div>
+                                                        <p><%= __('document.response.example') %>: </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre >
+    // Success:
+    {
+        "status": 1,
+        "msg": "SUCCESS",
+        "masterCode": "superAdmin",
+        "masterBalance": 1000000,
+        "masterType": "Transfer",
+        "masterTotalDebit": 100000,
+        "masterTotalCredit": 70000,
+        "masterTargetRtp": 95,
+        "masterRealRtp": 70,
+        "masterCreatedAt": "2023-04-26T07:00:07.000Z",
+        "currency": "USD",
+        "playerList": [
+            {
+                "playerCode": "test",
+                "playerBalance": 1000000,
+                "playerTotalDebit": 100000,
+                "playerTotalCredit": 70000,
+                "playerTargetRtp": 95,
+                "playerRealRtp": 70,
+                "playerCreatedAt": "2023-08-12T02:57:48.000Z"
+            },
+            {
+                "playerCode": "test1",
+                "playerBalance": 1000000,
+                "playerTotalDebit": 100000,
+                "playerTotalCredit": 80000,
+                "playerTargetRtp": 90,
+                "playerRealRtp": 80,
+                "playerCreatedAt": "2023-08-12T02:57:48.000Z"
+            }
+        ]
+    }
+
+
+    // Failure:
+    {
+        "status": 0,
+        "msg": "INVALID_PARAMETER"
+    }
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="s-providers" role="tabpanel" aria-labelledby="s-providers-tab">
+                                                        <p style="color:#ff5050; padding:1rem 0rem"><span class="badge badge-primary">POST</span>&nbsp;&nbsp;&nbsp;&nbsp;http://127.0.0.1:5555/api/providerList</p>
+                                                        
+                                                        <p><%= __('document.all.request') %></p>
+                                                        <p><%= __('document.you.can') %></p>
+                                                        <div style="display:flex;justify-content: space-between;"><p><%= __('document.request.example') %>: </p><button type="button" class="btn btn-outline-primary btn-sm" onclick="copySProvider();" id="btn-copy-sprovider">
+                                                            <i class="fa fa-copy"></i>&nbsp; <%= __('document.copy.code') %></button></div>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre id="s-provider-code">
+    {
+        "masterCode": "superAdmin",
+        "masterToken": "1816f360b3e6addfd5d3c56a64cad702",
+        "gameType": "slot" // "casino"
+    }
+                                                            </pre>
+                                                        </div>
+                                                        <p><%= __('document.response.example') %>: </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre >
+    // Success:
+    {
+        "status": 1,
+        "msg": "SUCCESS",
+        "providers": [
+            {
+                "type": "slot",
+                "code": "PRAGMATIC",
+                "name": "Pragmatic Play",
+                "backoffice": "self"
+            },
+            ...
+        ]
+    }
+
+    // Failure:
+    {
+        "status": 0,
+        "msg": "INTERNAL_ERROR"
+    }
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="s-games" role="tabpanel" aria-labelledby="s-games-tab">
+                                                        <p style="color:#ff5050; padding:1rem 0rem"><span class="badge badge-primary">POST</span>&nbsp;&nbsp;&nbsp;&nbsp;http://127.0.0.1:5555/api/gameList</p>
+                                                        
+                                                        <p><%= __('document.all.request') %></p>
+                                                        <p><%= __('document.you.can') %></p>
+                                                        <div style="display:flex;justify-content: space-between;"><p><%= __('document.request.example') %>: </p><button type="button" class="btn btn-outline-primary btn-sm" onclick="copySGame();" id="btn-copy-sgame">
+                                                            <i class="fa fa-copy"></i>&nbsp; <%= __('document.copy.code') %></button></div>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre id="s-game-code">
+    {
+        "masterCode": "superAdmin",
+        "masterToken": "1816f360b3e6addfd5d3c56a64cad702",
+        "providerCode": "PRAGMATIC",
+        "lang": "en"
+    }
+                                                            </pre>
+                                                        </div>
+                                                        <p><%= __('document.response.example') %>: </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre >
+    // Success:
+    {
+        "status": 1,
+        "msg": "SUCCESS",
+        "games": [
+            {
+                "id": 1,
+                "sort": 0,
+                "lang": "en",
+                "game_code": "vs243mwarrior",
+                "game_name": "Monkey Warrior",
+                "banner": "https://.../vs20doghouse.png",
+                "status": 1 // Available
+            },
+            {
+                "id": 2,
+                "sort": 0,
+                "lang": "en",
+                "game_code": "vs20doghouse",
+                "game_name": "The Dog House",
+                "banner": "https://.../vs243mwarrior.png",
+                "status": 0 // Not available
+            }
+        ]
+    }
+
+    // Failure:
+    {
+        "status": 0,
+        "msg": "INTERNAL_ERROR"
+    }
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="s-bcallback" role="tabpanel" aria-labelledby="s-bcallback-tab">
+                                                        <p><%= __('document.this.part1') %></p>
+                                                        <p><%= __('document.the.seamless1') %> </p>
+                                                        <p><%= __('document.assume.the') %></p>
+                                                        <p style="color:#0006b7">https://gaming.test.com</p>
+                                                        <p><%= __('document.then.our') %> </p>
+                                                        <p style="color:#0006b7">https://gaming.test.com/callback_api/user_balance</p>
+                                                        <p style="color:#ff5050; padding:1rem 0rem"><span class="badge badge-primary">POST</span>&nbsp;&nbsp;&nbsp;&nbsp;http://https://gaming.test.com/callback_api/user_balance</p>
+                                                        <p><%= __('document.request.example') %>: </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre>
+    {
+        "agent_code": "superAdmin",
+        "agent_token": "c40d8f850fec96aa815783a3ba7c1178",
+        "user_code": "test"
+    }
+                                                            </pre>
+                                                        </div>
+                                                        <p><%= __('document.response.example') %>: </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre >
+    // Success:
+    {
+        "status": 1,
+        "user_balance": 1000
+    }
+
+    // Failure:
+    {
+        "status": 0,
+        "user_balance": 0,
+        "msg": "INSUFFICIENT_USER_FUNDS"
+    }
+                                                            </pre>
+                                                        </div>
+                                                        <p><%= __('document.our.api') %></p>
+                                                        <p><%= __('document.for.this') %></p>
+                                                        <p><%= __('document.imp1') %> </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre >
+    function getUserBalance($req) {
+        $user_code = $req["user_code"];
+        
+        $sql = "SELECT * FROM users WHERE userCode='$user_code'";	
+        $result = $db->query($sql);
+        if ($result->num_rows == 0) {
+            return json_encode([
+            "status"=>0, 
+            "msg"=>"INVALID_USER"
+            ]);	
+        }
+            
+        $row = $result->fetch_assoc();
+        if($row["balance"] <= 0) {
+            return json_encode([
+            "status"=>0, 
+            "msg"=>"INSUFFICIENT_USER_FUNDS", 
+            "user_balance"=>0
+            ]);    
+        }
+        return json_encode([
+            "status"=>1, 
+            "user_balance"=>$row["balance"]
+        ]);  
+    }
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="s-gcallback" role="tabpanel" aria-labelledby="s-gcallback-tab">
+                                                        <p><%= __('document.this.part2') %> </p>
+                                                        <p><%= __('document.assume.the') %> </p>
+                                                        <p style="color:#0006b7">https://gaming.test.com</p>
+                                                        <p><%= __('document.then.our') %> </p>
+                                                        <p style="color:#0006b7">https://gaming.test.com/callback_api/game_callback</p>
+                                                        <p style="color:#ff5050; padding:1rem 0rem"><span class="badge badge-primary">POST</span>&nbsp;&nbsp;&nbsp;&nbsp;http://https://gaming.test.com/callback_api/game_callback</p>
+                                                        <p><%= __('document.request.example') %>: </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre>
+    {
+        "agent_code": "superAdmin",
+        "agent_token": "c40d8f850fec96aa815783a3ba7c1178",
+        "agent_balance": 98981676,
+        "user_code": "test",
+        "user_balance": 1739708,
+        "user_total_credit": 100000000,
+        "user_total_debit": 500000000,
+        "game_type": "slot",
+        "slot": {
+            "provider_code":"BOOONGO",
+            "game_code":"sun_of_egypt",
+            "round_id":1700000000001
+            "type":"BASE",
+            "bet":1000,
+            "win":200,
+            "txn_id": "MVGKE8FJE3838EFN378DF",
+            "txn_type": "debit_credit", // debit, credit
+            "user_before_balance": 1741708,
+            "user_after_balance": 1739708,
+            "agent_before_balance": 98981676,
+            "agent_after_balance": 98981676,
+            "created_at": "2022-09-29T12:50:42.000Z"
+        }
+    }
+                                                            </pre>
+                                                        </div>
+                                                        <p><%= __('document.response.example') %>: </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre >
+    // Success:
+    {
+        "status": 1,
+        "user_balance": 1000
+    }
+
+    // Failure:
+    {
+        "status": 0,
+        "user_balance": 0,
+        "msg": "INSUFFICIENT_USER_FUNDS"
+    }
+                                                            </pre>
+                                                        </div>
+                                                        <p><%= __('document.our.api') %></p>
+                                                        <p><%= __('document.for.this') %></p>
+                                                        <p><%= __('document.imp2') %> </p>
+                                                        <div style="margin-top:1rem; background-color:#e9ecef; padding-top:1rem">
+                                                            <pre >
+    function gameCallback($req) { 
+        $user_code = $req["user_code"];
+        $game_type = $req["game_type"];
+        $user_total_credit = $req["user_total_credit"];
+        $user_total_debit = $req["user_total_debit"];
+        $user_balance = $req["user_balance"];
+            
+        $sql = "SELECT * FROM users WHERE userCode='$user_code'";	
+        $result = $db->query($sql);
+        if ($result->num_rows == 0) {
+            return json_encode(["status"=>0, "msg"=>"INVALID_USER"]);
+        }
+        $row = $result->fetch_assoc();
+        $id = $row["id"];
+        $balance = $row["balance"];
+            
+        if($game_type == "slot") {
+            $txn_id = $req["slot"]["txn_id"];
+            $txn_type = $req["slot"]["txn_type"];
+            $bet = $req["slot"]["bet"];
+            $win = $req["slot"]["win"];
+            $round_id = $req["slot"]["round_id"];
+            $provider_code = $req["slot"]["provider_code"];
+            $game_code = $req["slot"]["game_code"];
+            $type = $req["slot"]["type"];
+            $is_buy = 0;
+            $is_call = 0;
+            $user_before_balance = $req["slot"]["user_before_balance"];
+            $user_after_balance = $req["slot"]["user_after_balance"];
+            $agent_before_balance = $req["slot"]["agent_before_balance"];
+            $agent_after_balance = $req["slot"]["agent_after_balance"];
+            $created_at = $req["slot"]["created_at"];
+            $created_at = substr(str_replace("T"," ",$created_at), 0, 19);
+            
+            $sql = "SELECT * FROM slot_game_histories WHERE 
+            txnId='$txn_id' AND txnType='$txn_type'";            
+            $result = $db->query($sql);
+            if ($result->num_rows > 0) {
+            return json_encode([
+                "status"=>0, 
+                "user_balance"=>0, 
+                "msg"=>"DUPLICATED_REQUEST"
+            ]);
+            }
+            
+            $result_balance = $balance - $bet + $win;
+            
+            $sql = "INSERT INTO slot_game_histories(roundId, userCode, providerCode, 
+            gameCode, spinType, bet, win, userBalance, userTotalDebit, 
+            userTotalCredit, txnId, txnType, isBuy, isCall, userBeforeBalance, 
+            userAfterBalance, agentBeforeBalance, agentAfterBalance, spinedAt, 
+            createdAt, updatedAt) VALUES('$round_id','$user_code','$provider_code',
+            '$game_code','$type','$bet','$win','$user_balance','$user_total_debit',
+            '$user_total_credit','$txn_id','$txn_type','$is_buy','$is_call',
+            '$user_before_balance','$user_after_balance','$agent_before_balance',
+            '$agent_after_balance','$created_at','$created_at','$created_at')";		
+            $db->query($sql);
+                    
+            $sql = "UPDATE users SET balance='$result_balance' WHERE id='$id'";
+            $db->query($sql);
+            
+            return json_encode([
+                "status"=>1, 
+                "user_balance"=>$result_balance
+            ]);		 
+        }
+    }
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                </div>    
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="copyright">
+                                        <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" value="0" id="tmp_buff" name="tmp_buff"/>
+                <!-- END PAGE CONTAINER-->
+            </div>
+    
+    </div>
+    <%- include('./footer.ejs') -%>
+    <%- include('./global.ejs') -%>
+
+    <script>       
+        $(document).ready(function () {   
+            const role = "<%= session.auth.role%>";
+
+        });
+        
+        function copyTCreateUserCode() {
+            var copyButton = $('#btn-copy-tcreateuser');
+            var codeText = $('#t-createuser-code').html();
+            processCopy(copyButton, codeText);
+        }
+
+        function copyTRunGame() {
+            var copyButton = $('#btn-copy-trungame');
+            var codeText = $('#t-rungame-code').html();
+            processCopy(copyButton, codeText);
+        }
+
+        function copyTDeposit() {
+            var copyButton = $('#btn-copy-tdeposit');
+            var codeText = $('#t-deposit-code').html();
+            processCopy(copyButton, codeText);
+        }
+
+        function copyTWithdraw() {
+            var copyButton = $('#btn-copy-twithdraw');
+            var codeText = $('#t-withdraw-code').html();
+            processCopy(copyButton, codeText);
+        }
+
+        function copyTWithdrawAll() {
+            var copyButton = $('#btn-copy-twithdrawall');
+            var codeText = $('#t-withdrawall-code').html();
+            processCopy(copyButton, codeText);
+        }
+
+        function copyTInfo() {
+            var copyButton = $('#btn-copy-tinfo');
+            var codeText = $('#t-info-code').html();
+            processCopy(copyButton, codeText);
+        }
+
+        function copyTProvider() {
+            var copyButton = $('#btn-copy-tprovider');
+            var codeText = $('#t-provider-code').html();
+            processCopy(copyButton, codeText);
+        }
+
+        function copyTGame() {
+            var copyButton = $('#btn-copy-tgame');
+            var codeText = $('#t-game-code').html();
+            processCopy(copyButton, codeText);
+        }
+
+        function copyTDateLog() {
+            var copyButton = $('#btn-copy-tdatelog');
+            var codeText = $('#t-datelog-code').html();
+            processCopy(copyButton, codeText);
+        }
+
+        function copyTIdLog() {
+            var copyButton = $('#btn-copy-tidlog');
+            var codeText = $('#t-idlog-code').html();
+            processCopy(copyButton, codeText);
+        }
+
+        function copyTExchange() {
+            var copyButton = $('#btn-copy-texchange');
+            var codeText = $('#t-exchange-code').html();
+            processCopy(copyButton, codeText);
+        }
+
+        function copySGameRun() {
+            var copyButton = $('#btn-copy-sgamerun');
+            var codeText = $('#s-gamerun-code').html();
+            processCopy(copyButton, codeText);
+        }
+
+        function copySInfo() {
+            var copyButton = $('#btn-copy-sinfo');
+            var codeText = $('#s-info-code').html();
+            processCopy(copyButton, codeText);
+        }
+        function copySProvider() {
+            var copyButton = $('#btn-copy-sprovider');
+            var codeText = $('#s-provider-code').html();
+            processCopy(copyButton, codeText);
+        }
+
+        function copySGame() {
+            var copyButton = $('#btn-copy-sgame');
+            var codeText = $('#s-game-code').html();
+            processCopy(copyButton, codeText);
+        }
+    </script>
+</body>
+
+</html>
+<!-- end document-->

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('../template/header.ejs') -%>
+    <style>
+    .dt-length {
+        margin:1rem !important;
+    }
+    .dt-paging {
+        float:right;
+        margin:1rem !important;
+    } 
+    </style>
+    <body class="animsition">
+        <div class="page-wrapper">
+            <!-- MENU SIDEBAR-->
+            <%- include('../template/sidebar.ejs',  {page: "plan"}) -%>
+            <!-- END MENU SIDEBAR-->
+    
+            <!-- PAGE CONTAINER-->
+            <div class="page-container2">
+                <!-- HEADER DESKTOP-->
+                <%- include('../template/rightsidebar.ejs') -%>
+                <%- include('../template/mobilesidebar.ejs', {page: "plan"}) -%>
+                <!-- END HEADER DESKTOP-->
+                <div class="page-loader__spin" style="display:none;"></div>
+                <!-- BREADCRUMB-->
+                <div class="main-content">
+                    <div class="section__content section__content--p30">
+                        <div class="container-fluid">
+                            <div class="row" id="main_body">                                
+                                
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="copyright">
+                                        <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" value="0" id="tmp_buff" name="tmp_buff"/>
+                <!-- END PAGE CONTAINER-->
+            </div>
+    
+    </div>
+    <%- include('../template/footer.ejs') -%>
+    <%- include('../template/global.ejs') -%>
+    <script>
+        const agentPercent = Number("<%= session.auth.percent %>");
+        function loadPlan() {
+            $.ajax({
+                type: "POST",
+                url: "/api/user_plan",
+                data: {},
+                success: function (res) {            
+                    let currencyInfo = res.currencyInfo;
+                    for(let i = 0; i < res.data.length; i++) {
+                        let id = res.data[i].id;
+                        let name = res.data[i].name;
+                        let amount = res.data[i].amount;
+                        let bonusPercent = res.data[i].bonusPercent;
+                        let allowGGR = agentPercent;
+                        let currencyPart = "$";
+                        let numberPart = Number(amount);
+                       
+                        let depositAmount = Math.floor(numberPart * currencyInfo.reverseRate / agentPercent * 100).toLocaleString();
+                        let bonusAmount = Math.floor(numberPart * currencyInfo.reverseRate / agentPercent * bonusPercent).toLocaleString();
+                        let totalAmount = Math.floor(numberPart * currencyInfo.reverseRate / agentPercent * (bonusPercent + 100)).toLocaleString();
+                                   
+                        $("#main_body").append(
+                            `<div class="col-md-4">
+                                <div class="card" style="border-radius:1rem">                                      
+                                        <div class="card-body">
+                                            <div>
+                                                <span class="bonus-title"><%= __('price.plan.bonus') %> ${bonusPercent}%</span>
+                                            </div>
+                                            <div style="text-align: center;">
+                                                <p class="money-title">${Number(amount).toLocaleString()}<sup>${currencyPart}</sup></p>
+                                            </div>
+                                            <div style="text-align: center;">
+                                                <span class="name-title">${name}</span>
+                                            </div>
+                                            <div class="plan-item ">
+                                                <span><%= __('price.plan.ggr') %></span>
+                                                <span>${agentPercent}</span>
+                                            </div>
+                                            <div class="plan-item ">
+                                                <span><%= __('price.plan.bonus') %></span>
+                                                <span>${bonusPercent}%</span>
+                                            </div>
+                                            <div class="plan-item ">
+                                                <span><%= __('price.plan.rate') %></span>
+                                                <p><span style='color:#ff5555'>$ 1</span> = ${currencyInfo.symbol} ${currencyInfo.reverseRate}</p>
+                                            </div>
+                                            <div class="plan-item ">
+                                                <span><%= __('price.plan.deposit.amount') %></span>
+                                                <span>${currencyInfo.symbol} ${depositAmount}</span>
+                                            </div>
+                                            <div class="plan-item ">
+                                                <span><%= __('price.plan.bonus.amount') %></span>
+                                                <span>${currencyInfo.symbol} ${bonusAmount}</span>
+                                            </div>
+                                            <div class="plan-item ">
+                                                <span><%= __('price.plan.total.amount') %></span>
+                                                <span>${currencyInfo.symbol} ${totalAmount}</span>
+                                            </div>
+                                            <div class="balance-inc">
+                                                <p><%= __('price.plan.your.balance') %></p>
+                                            </div>
+                                            <div class="total-money-item">
+                                                <p class="total-money-title">${currencyInfo.symbol} ${totalAmount}</p>
+                                            </div>
+                                            <div style="margin-top:1rem; text-align: center;">
+                                                <button class="btn btn-primary" onclick='checkPlan(${id})' id='chk-${id}'><%= __('price.plan.check.now') %></button>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                </div>`
+                        );
+                    }
+                },
+                error: function () {
+                    
+                },
+            });
+        }
+
+        function checkPlan(id) {
+            $("#chk-" +id).attr("disabled", true);
+    
+            $.ajax({
+                type: "POST",
+                url: "/api/plan_pay",
+                data: { id },
+                success: function (res) {
+                    if (res.status == 1) {      
+                        res.redirect_url = dot(res.redirect_url);
+                        const newTab = window.open(res.redirect_url, "_self");
+                        $(".checkPlan_" +id).attr("disabled", false);
+   
+                        newTab.focus();
+                    }
+                    else {
+                        toastr.error(`Error`);
+                    }
+                    $("#chk-" +id).removeAttr("disabled");
+                },
+                error: function () {
+                    $("#chk-" +id).removeAttr("disabled");
+                },
+            });
+        }
+        
+        $(document).ready(function () {   
+            const role = "<%= session.auth.role%>";
+            loadPlan();
+        });
+            
+        
+    </script>
+</body>
+
+</html>
+<!-- end document-->

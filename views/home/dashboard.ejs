@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('../template/header.ejs') -%>
+    <body class="animsition">
+        <div class="page-wrapper">
+            <!-- MENU SIDEBAR-->
+            <%- include('../template/sidebar.ejs', {page:'dashboard'}) -%>
+            <!-- END MENU SIDEBAR-->
+    
+            <!-- PAGE CONTAINER-->
+            <div class="page-container2">
+                <!-- HEADER DESKTOP-->
+                <%- include('../template/rightsidebar.ejs') -%>
+                <%- include('../template/mobilesidebar.ejs', {page:'dashboard'}) -%>
+                <!-- END HEADER DESKTOP-->
+                <div class="page-loader__spin" style="display:none;"></div>
+                <!-- BREADCRUMB-->
+                <div class="au-breadcrumb m-t-75" style="height:0px">
+                    
+                </div>
+                <!-- STATISTIC-->
+                <section class="statistic">
+                    <div class="section__content section__content--p30">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="statistic__item">
+                                        <h2 class="number" id="totalUserCount">10,368</h2>
+                                        <span class="desc"><%= __('dashboard.total.users') %></span>
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-account-o"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="statistic__item">
+                                        <h2 class="number" id="totalExchange">388,688</h2>
+                                        <span class="desc"><%= __('dashboard.exchanges') %></span>
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-shopping-cart"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="statistic__item">
+                                        <h2 class="number" id="totalPlay">1,086</h2>
+                                        <span class="desc"><%= __('dashboard.total.play') %></span>
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-calendar-note"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="statistic__item">
+                                        <h2 class="number" id="totalBalance">$1,060,386</h2>
+                                        <span class="desc"><%= __('dashboard.total.play') %></span>
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-money"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- END STATISTIC-->
+    
+                    <div class="section__content section__content--p30">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <!-- RECENT REPORT 2-->
+                                    <div class="recent-report2">
+                                        <h3 class="title-3"><%= __('dashboard.report.by.date') %></h3>
+                                        <div class="chart-info">
+                                            <div class="chart-info__left">
+                                                <div class="chart-note">
+                                                    <span class="dot dot--red"></span>
+                                                    <span><%= __('dashboard.total.credit') %></span>
+                                                </div>
+                                                <div class="chart-note">
+                                                    <span class="dot dot--green"></span>
+                                                    <span><%= __('dashboard.total.debit') %></span>
+                                                </div>
+                                            </div>
+                                            <div class="chart-info-right">                                                
+                                                <div class="rs-select2--dark rs-select2--sm">
+                                                    <select class="js-select2 au-select-dark" id="graph-date-selector">
+                                                        <option value="0" selected><%= __('dashboard.week') %></option>
+                                                        <option value="1"><%= __('dashboard.15days') %></option>
+                                                        <option value="2"><%= __('dashboard.month') %></option>
+                                                    </select>
+                                                    <div class="dropDownSelect2"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="recent-report__chart">
+                                            <canvas id="recent-date-chart"></canvas>
+                                        </div>
+                                    </div>
+                                    <!-- END RECENT REPORT 2             -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+              
+                    <div class="section__content section__content--p30" id="provider-part" style="display:none">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <!-- RECENT REPORT 2-->
+                                    <div class="recent-report2">
+                                        <h3 class="title-3"><%= __('dashboard.report.by.provider') %></h3>
+                                        <div class="chart-info">
+                                            <div class="chart-info__left">
+                                                <div class="chart-note">
+                                                    <span class="dot dot--red"></span>
+                                                    <span><%= __('dashboard.total.credit') %></span>
+                                                </div>
+                                                <div class="chart-note">
+                                                    <span class="dot dot--green"></span>
+                                                    <span><%= __('dashboard.total.debit') %></span>
+                                                </div>
+                                            </div>
+                                            <div class="chart-info-right">
+                                                <div class="rs-select2--dark rs-select2--sm">
+                                                    <select class="js-select2 au-select-dark" id="graph-provider-selector">
+                                                        <option value="0" selected><%= __('dashboard.week') %></option>
+                                                        <option value="1"><%= __('dashboard.15days') %></option>
+                                                        <option value="2"><%= __('dashboard.month') %></option>
+                                                    </select>
+                                                    <div class="dropDownSelect2"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="recent-report__chart">
+                                            <canvas id="recent-provider-chart"></canvas>
+                                        </div>
+                                    </div>
+                                    <!-- END RECENT REPORT 2             -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+ 
+                <div class="section__content section__content--p30" id="currency-part" style="display:none">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <!-- RECENT REPORT 2-->
+                                <div class="recent-report2">
+                                    <h3 class="title-3"><%= __('dashboard.report.by.currency') %></h3>
+                                    <div class="chart-info">
+                                        <div class="chart-info__left">
+                                            <div class="chart-note">
+                                                <span class="dot dot--red"></span>
+                                                <span><%= __('dashboard.total.credit') %></span>
+                                            </div>
+                                            <div class="chart-note">
+                                                <span class="dot dot--green"></span>
+                                                <span><%= __('dashboard.total.debit') %></span>
+                                            </div>
+                                        </div>
+                                        <div class="chart-info-right">
+                                            <div class="rs-select2--dark rs-select2--sm">
+                                                <select class="js-select2 au-select-dark" id="graph-currency-selector">
+                                                    <option value="0" selected><%= __('dashboard.week') %></option>
+                                                    <option value="1"><%= __('dashboard.15days') %></option>
+                                                    <option value="2"><%= __('dashboard.month') %></option>
+                                                </select>
+                                                <div class="dropDownSelect2"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="recent-report__chart">
+                                        <canvas id="recent-currency-chart"></canvas>
+                                    </div>
+                                </div>
+                                <!-- END RECENT REPORT 2             -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+
+                <section>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="copyright">
+                                    <p>Copyright © 2024 K. All rights reserved.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- END PAGE CONTAINER-->
+            </div>
+    
+    </div>
+    <%- include('../template/footer.ejs') -%>
+    <%- include('../template/global.ejs') -%>
+    <script>
+        const bd_brandProduct2 = 'rgba(0,181,233,0.9)'
+        const bd_brandService2 = 'rgba(0,173,95,0.9)'
+        const brandProduct2 = 'rgba(0,181,233,0.2)'
+        const brandService2 = 'rgba(0,173,95,0.2)'
+        
+        function drawDashboard(){
+            $(".page-loader__spin").show();
+            $.ajax({
+                type: "POST",
+                url: `/api/dashboard_info`,
+                data: {},
+                success: function (res) {
+                    if (res.status) {        
+                        $(".page-loader__spin").fadeOut();
+                        let dashboardData = res.data;         
+                        $("#totalBalance").html(dashboardData.totalBalance.toLocaleString());
+                        $("#totalPlay").html(dashboardData.playingCount);
+                        $("#totalUserCount").html(dashboardData.directUserCount + dashboardData.childUserCount);
+                        $("#totalExchange").html(dashboardData.todayTotalChildWithdrawOut.toLocaleString());
+                    }
+                },
+            });
+        }
+        function drawProviderGraph(startDate, endDate) {
+            const p = $('#recent-provider-chart').parent();
+            resetCanvas(p, "recent-provider-chart");
+
+            $(".page-loader__spin").show();
+            let ctx = document.getElementById("recent-provider-chart");
+            $.ajax({
+                type: "POST",
+                url: `/api/dashboard_provider_graph`,
+                data: {
+                    startDate,
+                    endDate
+                },
+                success: function (res) {
+                    $(".page-loader__spin").fadeOut();
+                    if(res.status) {
+                        if(res.result.providers.length > 0) {
+                            res.result = res.result;       
+                            ctx.height = 230;
+                            var myChart = new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: res.result.providers,
+                                    datasets: [
+                                        {
+                                            label: 'Debits',
+                                            backgroundColor: brandService2,
+                                            borderColor: bd_brandService2,
+                                            pointHoverBackgroundColor: '#fff',
+                                            borderWidth: 0,
+                                            data: res.result.debits
+                                        },
+                                        {
+                                            label: 'Credits',
+                                            backgroundColor: brandProduct2,
+                                            borderColor: bd_brandProduct2,
+                                            pointHoverBackgroundColor: '#fff',
+                                            borderWidth: 0,
+                                            data: res.result.credits
+                                        }
+                                    ]
+                                },
+                                options: {
+                                    maintainAspectRatio: true,
+                                    legend: {
+                                        display: false
+                                    },
+                                    responsive: true,
+                                    scales: {
+                                        xAxes: [{
+                                            gridLines: {
+                                                drawOnChartArea: true,
+                                                color: '#f2f2f2'
+                                            },
+                                            ticks: {
+                                                fontFamily: "Poppins",
+                                                fontSize: 12
+                                            }
+                                        }],
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true,
+                                                maxTicksLimit: 5,
+                                                stepSize: 50,
+                                                max: 150,
+                                                fontFamily: "Poppins",
+                                                fontSize: 12
+                                            },
+                                            gridLines: {
+                                                display: true,
+                                                color: '#f2f2f2'
+
+                                            }
+                                        }]
+                                    },
+                                    elements: {
+                                        point: {
+                                            radius: 0,
+                                            hitRadius: 10,
+                                            hoverRadius: 4,
+                                            hoverBorderWidth: 3
+                                        },
+                                        line: {
+                                            tension: 0
+                                        }
+                                    }
+                                }
+                            });
+                            $("#provider-part").css("display","block")
+                        }
+                        else {
+                            $("#provider-part").css("display","none")
+                        }
+                    }
+                }
+            });
+            
+        }
+        function resetCanvas(parentElem, elemId) {
+            $('#'+elemId).remove(); // this is my <canvas> element
+            parentElem.append(`<canvas id="${elemId}"><canvas>`);    
+        }
+        function drawCurrencyGraph(startDate, endDate, useRedis) {
+            const p = $('#recent-currency-chart').parent();
+            resetCanvas(p, "recent-currency-chart");
+
+            $(".page-loader__spin").show();
+            let ctx = document.getElementById("recent-currency-chart");
+
+            $.ajax({
+                type: "POST",
+                url: `/api/dashboard_currency_graph`,
+                data: {
+                    startDate,
+                    endDate
+                },
+                success: function (res) {
+                    $(".page-loader__spin").fadeOut();
+                    if(res.status) {                       
+                        if(res.result.currencies.length > 0) {
+                            res.result = res.result;       
+                            ctx.height = 230;
+                            var myChart = new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: res.result.currencies,
+                                    datasets: [
+                                        {
+                                            label: 'Debits',
+                                            backgroundColor: brandService2,
+                                            borderColor: bd_brandService2,
+                                            pointHoverBackgroundColor: '#fff',
+                                            borderWidth: 0,
+                                            data: res.result.debits
+                                        },
+                                        {
+                                            label: 'Credits',
+                                            backgroundColor: brandProduct2,
+                                            borderColor: bd_brandProduct2,
+                                            pointHoverBackgroundColor: '#fff',
+                                            borderWidth: 0,
+                                            data: res.result.credits
+                                        }
+                                    ]
+                                },
+                                options: {
+                                    maintainAspectRatio: true,
+                                    legend: {
+                                        display: false
+                                    },
+                                    responsive: true,
+                                    scales: {
+                                        xAxes: [{
+                                            gridLines: {
+                                                drawOnChartArea: true,
+                                                color: '#f2f2f2'
+                                            },
+                                            ticks: {
+                                                fontFamily: "Poppins",
+                                                fontSize: 12
+                                            }
+                                        }],
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true,
+                                                maxTicksLimit: 5,
+                                                stepSize: 50,
+                                                max: 150,
+                                                fontFamily: "Poppins",
+                                                fontSize: 12
+                                            },
+                                            gridLines: {
+                                                display: true,
+                                                color: '#f2f2f2'
+
+                                            }
+                                        }]
+                                    },
+                                    elements: {
+                                        point: {
+                                            radius: 0,
+                                            hitRadius: 10,
+                                            hoverRadius: 4,
+                                            hoverBorderWidth: 3
+                                        },
+                                        line: {
+                                            tension: 0
+                                        }
+                                    }
+                                }
+                            });
+                            $("#currency-part").css("display", "block");
+                        }
+                        else {
+                            $("#currency-part").css("display", "none");
+                        }
+                    }
+                }
+            });
+        }
+        function drawDayGraph(startDate, endDate) {
+            const p = $('#recent-date-chart').parent();
+            resetCanvas(p, "recent-date-chart");
+
+            $(".page-loader__spin").show();
+            let ctx = document.getElementById("recent-date-chart");
+            $.ajax({
+                type: "POST",
+                url: `/api/dashboard_day_graph`,
+                data: {
+                    startDate,
+                    endDate
+                },
+                success: function (res) {
+                    $(".page-loader__spin").fadeOut();
+                    if(res.status) {
+                        res.result = res.result;       
+                        ctx.height = 230;
+                        var myChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                        labels: res.result.days,
+                        datasets: [
+                            {
+                                label: 'Debits',
+                                backgroundColor: brandService2,
+                                borderColor: bd_brandService2,
+                                pointHoverBackgroundColor: '#fff',
+                                borderWidth: 0,
+                                data: res.result.debits
+                            },
+                            {
+                                label: 'Credits',
+                                backgroundColor: brandProduct2,
+                                borderColor: bd_brandProduct2,
+                                pointHoverBackgroundColor: '#fff',
+                                borderWidth: 0,
+                                data: res.result.credits
+                            }
+                        ]
+                        },
+                        options: {
+                        maintainAspectRatio: true,
+                        legend: {
+                            display: false
+                        },
+                        responsive: true,
+                        scales: {
+                            xAxes: [{
+                            gridLines: {
+                                drawOnChartArea: true,
+                                color: '#f2f2f2'
+                            },
+                            ticks: {
+                                fontFamily: "Poppins",
+                                fontSize: 12
+                            }
+                            }],
+                            yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                maxTicksLimit: 5,
+                                stepSize: 50,
+                                max: 150,
+                                fontFamily: "Poppins",
+                                fontSize: 12
+                            },
+                            gridLines: {
+                                display: true,
+                                color: '#f2f2f2'
+
+                            }
+                            }]
+                        },
+                        elements: {
+                            point: {
+                            radius: 0,
+                            hitRadius: 10,
+                            hoverRadius: 4,
+                            hoverBorderWidth: 3
+                            },
+                            line: {
+                            tension: 0
+                            }
+                        }
+                        }
+                    });
+                    }
+                }
+            });
+        }
+
+        
+
+        $(document).ready(function () {   
+            const role = "<%= session.auth.role%>";
+            
+            drawDashboard();
+
+            const d1 = getStartAndEndDate($("#graph-date-selector").val())
+            drawDayGraph(d1.startDate, d1.endDate);
+
+            const d2 = getStartAndEndDate($("#graph-provider-selector").val())
+            drawProviderGraph(d2.startDate, d2.endDate);
+
+            if(role == "1") {
+                const d3 = getStartAndEndDate($("#graph-currency-selector").val())
+                drawCurrencyGraph(d3.startDate, d3.endDate);
+            }
+        });
+    </script>
+</body>
+
+</html>
+<!-- end document-->

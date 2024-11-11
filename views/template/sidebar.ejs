@@ -1,0 +1,211 @@
+<aside class="menu-sidebar2">
+    <div class="logo">
+        <a href="#">
+            <img src="/images/icon/logo-white.png" style="width:100px" alt="Cool Admin" />
+        </a>
+    </div>
+    <div class="menu-sidebar2__content js-scrollbar1">
+        <div class="account2">
+            <i class="fas fa-user" style="font-size:36px;cursor:pointer" onclick="showProfile();"></i>
+            <h4 class="name" style="cursor:pointer" onclick="showProfile();"><%= session.auth.agentCode %></h4>
+            <a class="btn-sign-out" class="hand" style="cursor:pointer"><%= __('menu.sign.out') %></a>
+        </div>
+        <nav class="navbar-sidebar2">
+            <ul class="list-unstyled navbar__list">
+                <li class="<%= (page == 'dashboard')?'active':''%>">
+                    <a  href="/">
+                        <i class="fas fa-tachometer-alt"></i><%= __('menu.dashboard') %></a>                    
+                </li>
+                <li class="has-sub">
+                    <a class="js-arrow <%= (page == 'master_list'||page == 'master_transaction'||page == 'master_balance')?'open':''%>" href="#" >
+                        <i class="fas fa-address-book"></i><%= __('menu.agents') %></a>
+                    <ul class="list-unstyled navbar__sub-list js-sub-list" style="display: <%= (page == 'master_list'||page == 'master_transaction'||page == 'master_balance')?'block':'none'%>">
+                        <li class="<%= (page == 'master_list')?'active':''%>">
+                            <a href="/page/master_list" ><%= __('menu.management') %></a>
+                        </li>
+                        <li class="<%= (page == 'master_transaction')?'active':''%>">
+                            <a href="/page/master_transaction" ><%= __('menu.transactions') %></a>
+                        </li>
+                        <li class="<%= (page == 'master_balance')?'active':''%>">
+                            <a href="/page/master_balance"><%= __('menu.balance.history') %></a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="has-sub">
+                    <a class="js-arrow <%= (page == 'player_list'||page == 'player_exchange'||page == 'player_balance'||page == 'player_transaction')?'open':''%>" href="#">
+                        <i class="fas fa-users"></i><%= __('menu.users') %></a>
+                    <ul class="list-unstyled navbar__sub-list js-sub-list" style="display: <%= (page == 'player_list'||page == 'player_exchange'||page == 'player_balance'||page == 'player_transaction')?'block':'none'%>">
+                        <li class="<%= (page == 'player_list')?'active':''%>">
+                            <a href="/page/player_list"><%= __('menu.management') %></a>
+                        </li>
+                        <li class="<%= (page == 'player_exchange')?'active':''%>">
+                            <a href="/page/player_exchange"><%= __('menu.transactions') %></a>
+                        </li>
+                        <li class="<%= (page == 'player_balance')?'active':''%>">
+                            <a href="/page/player_balance"><%= __('menu.balance.history') %></a>
+                        </li>
+                        <li class="<%= (page == 'player_transaction')?'active':''%>">
+                            <a href="/page/player_transaction"><%= __('menu.game.history') %></a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="has-sub">
+                    <a class="js-arrow <%= (page == 'currency'||page == 'agent'||page == 'user'||page == 'provider'||page == 'game')?'open':''%>" href="#">
+                        <i class="fas fa-line-chart"></i><%= __('menu.statistics') %></a>
+                    <ul class="list-unstyled navbar__sub-list js-sub-list" style="display: <%= (page == 'currency'||page == 'agent'||page == 'user'||page == 'provider'||page == 'game')?'block':'none'%>">
+                        <li class="<%= (page == 'currency')?'active':''%>">
+                            <a href="/page/currency-stat" ><%= __('menu.currency') %></a>
+                        </li>
+                        <li class="<%= (page == 'agent')?'active':''%>">
+                            <a href="/page/agent-stat"><%= __('menu.agent') %></a>
+                        </li>
+                        <li class="<%= (page == 'user')?'active':''%>">
+                            <a href="/page/user-stat"><%= __('menu.user') %></a>
+                        </li>
+                        <li class="<%= (page == 'provider')?'active':''%>">
+                            <a href="/page/provider-stat"><%= __('menu.provider') %></a>
+                        </li>
+                        <li class="<%= (page == 'game')?'active':''%>">
+                            <a href="/page/game-stat"><%= __('menu.game') %></a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="has-sub">
+                    <a class="js-arrow <%= (page == 'provider_list'||page == 'game_run')?'open':''%>" href="#">
+                        <i class="fas fa-share-alt"></i><%= __('menu.provider') %></a>
+                    <ul class="list-unstyled navbar__sub-list js-sub-list" style="display: <%= (page == 'provider_list'||page == 'game_run')?'block':'none'%>">
+                        <li class="<%= (page == 'provider_list')?'active':''%>">
+                            <a href="/page/provider"><%= __('menu.management') %></a>
+                        </li>
+                        <li class="<%= (page == 'game_run')?'active':''%>">
+                            <a href="/page/game"><%= __('menu.game.launch') %></a>
+                        </li>
+                    </ul>
+                </li> 
+                <% if(session.showBilling) { %>
+                <li class="has-sub">
+                    <a class="js-arrow <%= (page == 'plan'||page == 'payment')?'open':''%>" href="#">
+                        <i class="zmdi zmdi-money-box"></i><%= __('menu.billing') %></a>
+                    <ul class="list-unstyled navbar__sub-list js-sub-list" style="display: <%= (page == 'plan'||page == 'payment')?'block':'none'%>">
+                        <li class="<%= (page == 'plan')?'active':''%>">
+                            <a href="/page/plan"><%= __('menu.price.plan') %></a>
+                        </li>
+                        <li class="<%= (page == 'payment')?'active':''%>">
+                            <a href="/page/payment"><%= __('menu.history') %></a>
+                        </li>
+                    </ul>
+                </li>            
+                <% } %>             
+                <li class="<%= (page == 'documentation')?'active':''%>">
+                    <a class="js-arrow <%= (page == 'documentation')?'open':''%>" href="/page/documentation">
+                        <i class="fas fa-book"></i><%= __('menu.documentation') %></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>
+<div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true"
+    data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="profileModalLabel"><%= __('profile.my.profile') %></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">                
+                <div class="card">
+                    <div class="card-header">
+                        <h5><%= __('profile.details') %></h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <%= __('profile.balance') %>:
+                            </div>
+                     
+                            <div class="col-sm-9">
+                                <strong><%= session.auth.balance %></strong>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:0.5rem">
+                            <div class="col-lg-3">
+                                <p><%= __('profile.agent.code') %>:</p>
+                            </div>
+                            <div class="col-lg-9">
+                                <p><strong><%= session.auth.agentCode %></strong></p>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:0.5rem">
+                            <div class="col-lg-3">
+                                <p><%= __('profile.percent') %>:</p>
+                            </div>
+                            <div class="col-lg-9">
+                                <p><strong><%= session.auth.percent %></strong>%</p>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:0.5rem">
+                            <div class="col-lg-3">
+                                <p><%= __('profile.api.type') %>:</p>
+                            </div>
+                            <div class="col-lg-9">
+                                <p>
+                                <% if(session.auth.apiType == 1)  { %> 
+                                    <span class="badge badge-primary">Transfer</span>
+                                <% } else { %>
+                                    <span class="badge badge-success">Seamless</span>
+                                <% } %>
+                                </p>
+
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:0.5rem">
+                            <div class="col-lg-3">
+                                <p><%= __('profile.agent.token') %>:</p>
+                            </div>
+                            <div class="col-lg-9" style="display:flex">
+                                <input type="text" value="<%= session.auth.token %>" class='form-control' readonly id="myToken"/>
+                                <button class="btn btn-primary" onclick="copyToken()" id="token_copy_btn"><i class="fa fa-copy"></i>&nbsp;<%= __('profile.copy.code') %></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>                 
+                <div class="card">
+                    <div class="card-header">
+                        <h5><%= __('profile.password.change') %></h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-12" style="margin-top:0.5rem">
+                                <div class="form-group">
+                                    <label for="oldpwd" class="control-label mb-1"><%= __('profile.old.password') %></label>
+                                    <input id="oldpwd" name="oldpwd" type="password" class="form-control" aria-required="true" aria-invalid="false" value="">
+                                </div>
+                            </div>
+                            <div class="col-xl-12" style="margin-top:0.5rem">
+                                <div class="form-group">
+                                    <label for="newpwd" class="control-label mb-1"><%= __('profile.new.password') %></label>
+                                    <input id="newpwd" name="newpwd" type="password" class="form-control" aria-required="true" aria-invalid="false" value="">
+                                </div>
+                            </div>
+                            <div class="col-xl-12" style="margin-top:0.5rem">
+                                <div class="form-group">
+                                    <label for="confirmpwd" class="control-label mb-1"><%= __('profile.confirm.password') %></label>
+                                    <input id="confirmpwd" name="confirmpwd" type="password" class="form-control" aria-required="true" aria-invalid="false" value="">
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= __('button.text.cancel') %></button>
+                <button type="button" class="btn btn-primary" id="password_change">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    
+</script>
